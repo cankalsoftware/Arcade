@@ -1,0 +1,15 @@
+<svg width="40" height="70" viewBox="0 0 40 70" xmlns="http://www.w3.org/2000/svg">
+  <!-- Body -->
+  <path d="M10,10 L30,10 L35,20 L35,60 L30,70 L10,70 L5,60 L5,20 Z" fill="#ff0000" stroke="#cc0000" stroke-width="2"/>
+  <!-- Spoiler -->
+  <rect x="5" y="60" width="30" height="5" fill="#cc0000"/>
+  <!-- Cockpit -->
+  <path d="M15,30 L25,30 L25,45 L15,45 Z" fill="#333"/>
+  <!-- Stripe -->
+  <rect x="18" y="10" width="4" height="60" fill="#ffcc00"/>
+  <!-- Wheels -->
+  <rect x="0" y="15" width="5" height="12" fill="#000"/>
+  <rect x="35" y="15" width="5" height="12" fill="#000"/>
+  <rect x="0" y="50" width="5" height="12" fill="#000"/>
+  <rect x="35" y="50" width="5" height="12" fill="#000"/>
+</svg>

@@ -4,7 +4,9 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 const isProtectedRoute = createRouteMatcher([
   // '/space_invaders(.*)',
   // '/tetris(.*)',
-  // '/pacman(.*)'
+  // '/pacman(.*)',
+  // '/donkey-kong(.*)',
+  // '/frogger(.*)'
 ])
 
 export default clerkMiddleware(async (auth, req) => {

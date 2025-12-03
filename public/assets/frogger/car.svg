@@ -1,0 +1,8 @@
+<svg width="40" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="5" width="36" height="20" rx="5" fill="#ef4444"/>
+  <rect x="8" y="8" width="24" height="14" fill="#000" opacity="0.5"/>
+  <rect x="4" y="2" width="6" height="4" fill="#000"/> <!-- Wheel -->
+  <rect x="30" y="2" width="6" height="4" fill="#000"/> <!-- Wheel -->
+  <rect x="4" y="24" width="6" height="4" fill="#000"/> <!-- Wheel -->
+  <rect x="30" y="24" width="6" height="4" fill="#000"/> <!-- Wheel -->
+</svg>

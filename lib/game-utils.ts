@@ -38,20 +38,20 @@ export const BUNKER_WIDTH = 60;
 export const BUNKER_HEIGHT = 40;
 
 export const PLAYER_SHIPS = [
-    '/assets/player1.png',
-    '/assets/player2.png',
-    '/assets/player3.png',
+    '/assets/space-invaders/player1.png',
+    '/assets/space-invaders/player2.png',
+    '/assets/space-invaders/player3.png',
 ];
 
 export const ENEMY_SHIPS = [
-    '/assets/enemy1.png',
-    '/assets/enemy2.png',
-    '/assets/enemy3.png',
-    '/assets/enemy4.png',
-    '/assets/enemy5.png',
-    '/assets/enemy6.png',
-    '/assets/enemy7.png',
-    '/assets/enemy8.png',
-    '/assets/enemy9.png',
-    '/assets/enemy10.png',
+    '/assets/space-invaders/enemy1.png',
+    '/assets/space-invaders/enemy2.png',
+    '/assets/space-invaders/enemy3.png',
+    '/assets/space-invaders/enemy4.png',
+    '/assets/space-invaders/enemy5.png',
+    '/assets/space-invaders/enemy6.png',
+    '/assets/space-invaders/enemy7.png',
+    '/assets/space-invaders/enemy8.png',
+    '/assets/space-invaders/enemy9.png',
+    '/assets/space-invaders/enemy10.png',
 ];

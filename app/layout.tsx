@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Space Invaders 2025',
-  description: 'Classic Space Invader game built with Next.js and Convex',
+  title: 'Online Arcade',
+  description: 'Classic arcade games 2025',
 }
 
 export default function RootLayout({

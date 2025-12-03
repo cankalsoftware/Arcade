@@ -1,0 +1,16 @@
+<svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dress -->
+  <path d="M5,30 L15,10 L25,30 Z" fill="#f0f"/>
+  <!-- Body -->
+  <rect x="12" y="10" width="6" height="10" fill="#fcc"/>
+  <!-- Head -->
+  <rect x="10" y="2" width="10" height="8" fill="#fcc"/>
+  <!-- Hair -->
+  <rect x="8" y="2" width="14" height="4" fill="#ff0"/>
+  <rect x="8" y="2" width="2" height="10" fill="#ff0"/>
+  <rect x="20" y="2" width="2" height="10" fill="#ff0"/>
+  <!-- Face -->
+  <rect x="13" y="5" width="1" height="1" fill="#000"/>
+  <rect x="16" y="5" width="1" height="1" fill="#000"/>
+  <rect x="14" y="8" width="2" height="1" fill="#f00"/>
+</svg>

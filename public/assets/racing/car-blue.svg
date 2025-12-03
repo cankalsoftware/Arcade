@@ -1,0 +1,18 @@
+<svg width="40" height="70" viewBox="0 0 40 70" xmlns="http://www.w3.org/2000/svg">
+  <!-- Body -->
+  <path d="M5,10 L35,10 L38,20 L38,65 L35,70 L5,70 L2,65 L2,20 Z" fill="#0000cc" stroke="#00008b" stroke-width="2"/>
+  <!-- Hood Stripes -->
+  <rect x="12" y="10" width="4" height="30" fill="#fff"/>
+  <rect x="24" y="10" width="4" height="30" fill="#fff"/>
+  <!-- Windshield -->
+  <path d="M5,25 L35,25 L32,35 L8,35 Z" fill="#87ceeb" opacity="0.8"/>
+  <!-- Roof -->
+  <rect x="8" y="35" width="24" height="20" fill="#00008b"/>
+  <!-- Rear Window -->
+  <rect x="10" y="55" width="20" height="5" fill="#000"/>
+  <!-- Wheels -->
+  <rect x="0" y="15" width="3" height="10" fill="#000"/>
+  <rect x="37" y="15" width="3" height="10" fill="#000"/>
+  <rect x="0" y="55" width="3" height="10" fill="#000"/>
+  <rect x="37" y="55" width="3" height="10" fill="#000"/>
+</svg>

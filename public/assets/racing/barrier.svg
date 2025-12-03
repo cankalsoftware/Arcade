@@ -1,0 +1,12 @@
+<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base -->
+  <rect x="2" y="25" width="36" height="10" fill="#cc0000" stroke="#fff" stroke-width="2"/>
+  <!-- Stripes -->
+  <path d="M5,25 L10,35 M15,25 L20,35 M25,25 L30,35" stroke="#fff" stroke-width="2"/>
+  <!-- Top Bar -->
+  <rect x="5" y="15" width="30" height="10" fill="#fff"/>
+  <rect x="5" y="15" width="30" height="10" fill="repeating-linear-gradient(45deg, #cc0000, #cc0000 5px, #fff 5px, #fff 10px)"/>
+  <!-- Lights -->
+  <circle cx="5" cy="10" r="3" fill="#ffcc00"/>
+  <circle cx="35" cy="10" r="3" fill="#ffcc00"/>
+</svg>
