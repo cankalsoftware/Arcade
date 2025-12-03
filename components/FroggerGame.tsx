@@ -160,7 +160,7 @@ export default function FroggerGame() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [gameState]);
 
-    const handleDeath = () => {
+    const handleDeath = React.useCallback(() => {
         if (lives > 1) {
             setLives(prev => prev - 1);
             frogRef.current = { x: 7 * GRID_SIZE, y: 12 * GRID_SIZE };
@@ -169,9 +169,9 @@ export default function FroggerGame() {
             setGameState('GAME_OVER');
             submitScore({ score: scoreRef.current, level, gameType: 'frogger' });
         }
-    };
+    }, [lives, level, submitScore]);
 
-    const handleLevelComplete = () => {
+    const handleLevelComplete = React.useCallback(() => {
         const nextLevel = level + 1;
 
         // Auth Check
@@ -191,30 +191,24 @@ export default function FroggerGame() {
         setScore(scoreRef.current);
         setLevel(nextLevel);
         initLevel(nextLevel);
-    };
+    }, [level, user, submitScore]);
 
-    const handleHome = () => {
-        // Check which slot
-        const slot = Math.floor(frogRef.current.x / (GRID_SIZE * 3)); // Approx slots
-        // Simplified: Just check if y < GRID_SIZE
-
+    const handleHome = React.useCallback(() => {
         scoreRef.current += 50;
         setScore(scoreRef.current);
         frogRef.current = { x: 7 * GRID_SIZE, y: 12 * GRID_SIZE };
         timeRef.current = 60;
 
         // Check if all homes filled (Simplified: Just count successful trips for now)
-        // Ideally we'd track specific slots. For now, let's just require 5 trips.
         const filledCount = homesRef.current.filter(h => h).length;
         if (filledCount < 4) {
-            // Mark a home as filled (visual only for now in this simplified logic)
             const newHomes = [...homesRef.current];
             newHomes[filledCount] = true;
             homesRef.current = newHomes;
         } else {
             handleLevelComplete();
         }
-    };
+    }, [handleLevelComplete]);
 
     // Game Loop
     useEffect(() => {
@@ -309,7 +303,7 @@ export default function FroggerGame() {
             });
 
             // Lanes
-            lanesRef.current.forEach((lane, r) => {
+            lanesRef.current.forEach((lane) => {
                 lane.objects.forEach(obj => {
                     const img = imagesRef.current[obj.type];
                     if (img && img.complete) {
@@ -342,7 +336,7 @@ export default function FroggerGame() {
 
         reqRef.current = requestAnimationFrame(loop);
         return () => cancelAnimationFrame(reqRef.current);
-    }, [gameState, level, lives, user, submitScore]);
+    }, [gameState, level, lives, user, submitScore, handleDeath, handleHome]);
 
     const startGame = () => {
         setLevel(1);

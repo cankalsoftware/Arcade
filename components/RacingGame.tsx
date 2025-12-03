@@ -5,6 +5,7 @@ import { useUser, SignInButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import NextImage from 'next/image';
 
 const CANVAS_WIDTH = 400;
 const CANVAS_HEIGHT = 600;
@@ -127,7 +128,7 @@ export default function RacingGame() {
         };
     }, []);
 
-    const handleLevelComplete = () => {
+    const handleLevelComplete = React.useCallback(() => {
         const nextLevel = levelRef.current + 1;
 
         // Auth Check
@@ -146,12 +147,12 @@ export default function RacingGame() {
         setLevel(nextLevel);
         levelRef.current = nextLevel;
         resetGame();
-    };
+    }, [user, submitScore]);
 
-    const handleGameOver = () => {
+    const handleGameOver = React.useCallback(() => {
         setGameState('GAME_OVER');
         submitScore({ score: scoreRef.current, level: levelRef.current, gameType: 'racing' });
-    };
+    }, [submitScore]);
 
     // Game Loop
     useEffect(() => {
@@ -299,7 +300,7 @@ export default function RacingGame() {
 
         reqRef.current = requestAnimationFrame(loop);
         return () => cancelAnimationFrame(reqRef.current);
-    }, [gameState, selectedCar, user, submitScore]);
+    }, [gameState, selectedCar, user, submitScore, handleGameOver, handleLevelComplete]);
 
     const startGame = () => {
         resetGame(true);
@@ -337,7 +338,7 @@ export default function RacingGame() {
                                     onClick={() => setSelectedCar(idx)}
                                     className={`p-2 border-2 cursor-pointer transition-all ${selectedCar === idx ? 'border-white scale-110' : 'border-transparent opacity-50'}`}
                                 >
-                                    <img src={car.src} alt={car.name} className="w-10 h-16 object-contain" />
+                                    <NextImage src={car.src} alt={car.name} width={40} height={64} className="w-10 h-16 object-contain" />
                                     <div className="text-xs mt-1 text-white">{car.name}</div>
                                 </div>
                             ))}

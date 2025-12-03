@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useUser, SignInButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
-// --- Constants & Types ---
 // --- Constants & Types ---
 const ROWS = 20;
 const BLOCK_SIZE = 30;
@@ -58,30 +57,63 @@ export default function TetrisGame() {
     const levelRef = useRef(1);
     const colsRef = useRef(10);
 
-    const resetGame = () => {
-        const startCols = getCols(1);
-        gridRef.current = Array.from({ length: ROWS }, () => Array(startCols).fill(0));
-        setScore(0);
-        scoreRef.current = 0;
-        setLines(0);
-        setLevel(1);
-        levelRef.current = 1;
-        setCols(startCols);
-        colsRef.current = startCols;
-        dropIntervalRef.current = 1000;
+    const drawNext = useCallback(() => {
+        const canvas = nextCanvasRef.current;
+        const ctx = canvas?.getContext('2d');
+        if (!canvas || !ctx) return;
 
-        // Init next piece
-        const typeId = Math.floor(Math.random() * SHAPES.length);
-        nextPieceRef.current = {
-            shape: SHAPES[typeId],
-            color: COLORS[typeId]
-        };
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!nextPieceRef.current) return;
 
-        spawnPiece();
-    };
+        ctx.fillStyle = nextPieceRef.current.color;
+        const shape = nextPieceRef.current.shape;
+        const blockSize = 20;
+        const offsetX = (canvas.width - shape[0].length * blockSize) / 2;
+        const offsetY = (canvas.height - shape.length * blockSize) / 2;
 
-    const spawnPiece = () => {
+        shape.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value !== 0) {
+                    ctx.fillRect(offsetX + x * blockSize, offsetY + y * blockSize, blockSize - 1, blockSize - 1);
+                }
+            });
+        });
+    }, []);
+
+    const checkCollision = useCallback((x: number, y: number, shape: number[][]) => {
+        for (let r = 0; r < shape.length; r++) {
+            for (let c = 0; c < shape[r].length; c++) {
+                if (shape[r][c] !== 0) {
+                    const newX = x + c;
+                    const newY = y + r;
+
+                    if (newX < 0 || newX >= colsRef.current || newY >= ROWS) {
+                        return true;
+                    }
+
+                    if (newY >= 0 && gridRef.current[newY][newX] !== 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }, []);
+
+    const rotate = useCallback((matrix: number[][]) => {
+        return matrix[0].map((_, index) => matrix.map(row => row[index]).reverse());
+    }, []);
+
+    const spawnPiece = useCallback(() => {
         // Promote next piece to current
+        if (!nextPieceRef.current) {
+            const typeId = Math.floor(Math.random() * SHAPES.length);
+            nextPieceRef.current = {
+                shape: SHAPES[typeId],
+                color: COLORS[typeId]
+            };
+        }
+
         const currentShape = nextPieceRef.current!.shape;
         const currentColor = nextPieceRef.current!.color;
 
@@ -110,55 +142,9 @@ export default function TetrisGame() {
                 gameType: "tetris"
             });
         }
-    };
+    }, [checkCollision, drawNext, submitScore]);
 
-    const drawNext = () => {
-        const canvas = nextCanvasRef.current;
-        const ctx = canvas?.getContext('2d');
-        if (!canvas || !ctx || !nextPieceRef.current) return;
-
-        // Clear
-        ctx.fillStyle = '#111';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Draw Next Piece centered
-        const shape = nextPieceRef.current.shape;
-        const color = nextPieceRef.current.color;
-        const blockSize = 20; // Smaller blocks for preview
-
-        const offsetX = (canvas.width - shape[0].length * blockSize) / 2;
-        const offsetY = (canvas.height - shape.length * blockSize) / 2;
-
-        ctx.fillStyle = color;
-        shape.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if (value !== 0) {
-                    ctx.fillRect(offsetX + x * blockSize, offsetY + y * blockSize, blockSize - 1, blockSize - 1);
-                }
-            });
-        });
-    };
-
-    const checkCollision = (x: number, y: number, shape: number[][]) => {
-        for (let r = 0; r < shape.length; r++) {
-            for (let c = 0; c < shape[r].length; c++) {
-                if (shape[r][c] !== 0) {
-                    const newX = x + c;
-                    const newY = y + r;
-                    if (newX < 0 || newX >= colsRef.current || newY >= ROWS || (newY >= 0 && gridRef.current[newY][newX] !== 0)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    };
-
-    const rotate = (matrix: number[][]) => {
-        return matrix[0].map((_, index) => matrix.map(row => row[index]).reverse());
-    };
-
-    const merge = () => {
+    const merge = useCallback(() => {
         if (!pieceRef.current) return;
         pieceRef.current.shape.forEach((row, r) => {
             row.forEach((value, c) => {
@@ -172,9 +158,9 @@ export default function TetrisGame() {
                 }
             });
         });
-    };
+    }, []);
 
-    const sweep = () => {
+    const sweep = useCallback(() => {
         let rowCount = 0;
         outer: for (let r = ROWS - 1; r >= 0; r--) {
             for (let c = 0; c < colsRef.current; c++) {
@@ -228,9 +214,31 @@ export default function TetrisGame() {
                 return newLines;
             });
         }
-    };
+    }, [user]);
 
-    const playerDrop = () => {
+    const resetGame = useCallback(() => {
+        const startCols = getCols(1);
+        gridRef.current = Array.from({ length: ROWS }, () => Array(startCols).fill(0));
+        setScore(0);
+        scoreRef.current = 0;
+        setLines(0);
+        setLevel(1);
+        levelRef.current = 1;
+        setCols(startCols);
+        colsRef.current = startCols;
+        dropIntervalRef.current = 1000;
+
+        // Init next piece
+        const typeId = Math.floor(Math.random() * SHAPES.length);
+        nextPieceRef.current = {
+            shape: SHAPES[typeId],
+            color: COLORS[typeId]
+        };
+
+        spawnPiece();
+    }, [spawnPiece]);
+
+    const playerDrop = useCallback(() => {
         if (!pieceRef.current) return;
         if (!checkCollision(pieceRef.current.x, pieceRef.current.y + 1, pieceRef.current.shape)) {
             pieceRef.current.y++;
@@ -240,16 +248,16 @@ export default function TetrisGame() {
             sweep();
             spawnPiece();
         }
-    };
+    }, [checkCollision, merge, sweep, spawnPiece]);
 
-    const playerMove = (dir: number) => {
+    const playerMove = useCallback((dir: number) => {
         if (!pieceRef.current) return;
         if (!checkCollision(pieceRef.current.x + dir, pieceRef.current.y, pieceRef.current.shape)) {
             pieceRef.current.x += dir;
         }
-    };
+    }, [checkCollision]);
 
-    const playerRotate = () => {
+    const playerRotate = useCallback(() => {
         if (!pieceRef.current) return;
         const rotated = rotate(pieceRef.current.shape);
         // Wall kick (basic)
@@ -264,7 +272,7 @@ export default function TetrisGame() {
         }
         pieceRef.current.shape = rotated;
         pieceRef.current.x = x;
-    };
+    }, [rotate, checkCollision]);
 
     // Input
     useEffect(() => {
@@ -282,7 +290,7 @@ export default function TetrisGame() {
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [gameState]);
+    }, [gameState, playerMove, playerDrop, playerRotate]);
 
     // Game Loop
     useEffect(() => {
@@ -338,12 +346,12 @@ export default function TetrisGame() {
 
         update();
         return () => cancelAnimationFrame(reqRef.current);
-    }, [gameState, cols]); // Add cols dependency to redraw on resize
+    }, [gameState, cols, playerDrop]);
 
-    const startGame = () => {
+    const startGame = useCallback(() => {
         resetGame();
         setGameState('PLAYING');
-    };
+    }, [resetGame]);
 
     return (
         <div className="flex flex-col items-center gap-2">
@@ -405,8 +413,6 @@ export default function TetrisGame() {
                     </div>
                 )}
             </div>
-
-
 
             {/* Controls Legend */}
             <div className="mt-4 text-gray-400 font-mono text-sm flex flex-wrap justify-center gap-6 bg-gray-900/50 p-4 rounded-lg border border-gray-800">

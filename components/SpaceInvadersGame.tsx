@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 // --- Constants & Types ---
@@ -26,44 +26,41 @@ export default function SpaceInvadersGame() {
     const [lives, setLives] = useState(3);
     const [selectedShipIndex, setSelectedShipIndex] = useState(0);
     const [canvasWidth, setCanvasWidth] = useState(800);
+    const canvasWidthRef = useRef(800);
 
     // Assets
     const playerImageRef = useRef<HTMLImageElement | null>(null);
     const enemyImageRef = useRef<HTMLImageElement | null>(null);
+    const keysRef = useRef<{ [key: string]: boolean }>({});
+    const enemiesRef = useRef<Enemy[]>([]);
+    const bunkersRef = useRef<Bunker[]>([]);
+    const bulletsRef = useRef<Projectile[]>([]);
+    const enemyBulletsRef = useRef<Projectile[]>([]);
+    const playerRef = useRef<Player>({ x: 375, y: 550, width: PLAYER_WIDTH, height: PLAYER_HEIGHT, speed: 5 });
+    const lastShotTimeRef = useRef(0);
+    const lastEnemyShotTimeRef = useRef(0);
+    const enemyDirectionRef = useRef(1);
+    const animationFrameRef = useRef<number>(0);
 
-    // Convex hooks
-    const levelConfig = useQuery(api.levels.getLevel, { levelNumber: level });
+    // Convex
     const submitScore = useMutation(api.scores.submitScore);
-    const initLevels = useMutation(api.levels.initLevels);
     const saveGameMutation = useMutation(api.games.saveGame);
     const loadGameQuery = useQuery(api.games.loadGame);
     const clearSaveMutation = useMutation(api.games.clearSave);
 
-    // Game state refs
-    const playerRef = useRef<Player>({ x: 800 / 2 - PLAYER_WIDTH / 2, y: CANVAS_HEIGHT - 50, width: PLAYER_WIDTH, height: PLAYER_HEIGHT, speed: 5 });
-    const bulletsRef = useRef<Projectile[]>([]);
-    const enemyBulletsRef = useRef<Projectile[]>([]);
-    const enemiesRef = useRef<Enemy[]>([]);
-    const bunkersRef = useRef<Bunker[]>([]);
-    const keysRef = useRef<{ [key: string]: boolean }>({});
-    const lastShotTimeRef = useRef(0);
-    const lastEnemyShotTimeRef = useRef(0);
-    const animationFrameRef = useRef<number>(0);
-    const enemyDirectionRef = useRef(1);
-    const canvasWidthRef = useRef(800);
-
-    // Initialize levels
-    useEffect(() => {
-        initLevels();
-    }, [initLevels]);
-
+    // Level Config
+    const levelConfig = {
+        config: {
+            enemyRows: Math.min(6, 3 + Math.floor((level - 1) / 5)),
+            enemyCols: Math.min(12, 6 + Math.floor((level - 1) / 3)),
+            enemySpeed: 1 + level * 0.1,
+            fireRate: Math.max(500, 2000 - level * 50),
+            bunkers: Math.max(0, 4 - Math.floor((level - 1) / 10))
+        }
+    };
     // Load assets
-    const removeWhiteBackground = (img: HTMLImageElement): Promise<HTMLImageElement> => {
+    const removeWhiteBackground = useCallback((img: HTMLImageElement): Promise<HTMLImageElement> => {
         return new Promise((resolve) => {
-            if (!img.complete) {
-                img.onload = () => resolve(removeWhiteBackground(img));
-                return;
-            }
             const canvas = document.createElement('canvas');
             canvas.width = img.width;
             canvas.height = img.height;
@@ -89,35 +86,38 @@ export default function SpaceInvadersGame() {
             newImg.src = canvas.toDataURL();
             newImg.onload = () => resolve(newImg);
         });
-    };
+    }, []);
 
     useEffect(() => {
         const pImg = new Image();
+        pImg.onload = () => {
+            // Apply fix for player 2 (index 1)
+            if (selectedShipIndex === 1) {
+                removeWhiteBackground(pImg).then(processed => {
+                    playerImageRef.current = processed;
+                });
+            } else {
+                playerImageRef.current = pImg;
+            }
+        };
         pImg.src = PLAYER_SHIPS[selectedShipIndex];
-        // Apply fix for player 2 (index 1)
-        if (selectedShipIndex === 1) {
-            removeWhiteBackground(pImg).then(processed => {
-                playerImageRef.current = processed;
-            });
-        } else {
-            playerImageRef.current = pImg;
-        }
-    }, [selectedShipIndex]);
+    }, [selectedShipIndex, removeWhiteBackground]);
 
     useEffect(() => {
         const eImg = new Image();
         const enemyImgIndex = (level - 1) % ENEMY_SHIPS.length;
+        eImg.onload = () => {
+            // Apply fix for enemy 2 (index 1) and enemy 6 (index 5)
+            if (enemyImgIndex === 1 || enemyImgIndex === 5) {
+                removeWhiteBackground(eImg).then(processed => {
+                    enemyImageRef.current = processed;
+                });
+            } else {
+                enemyImageRef.current = eImg;
+            }
+        };
         eImg.src = ENEMY_SHIPS[enemyImgIndex];
-
-        // Apply fix for enemy 2 (index 1) and enemy 6 (index 5)
-        if (enemyImgIndex === 1 || enemyImgIndex === 5) {
-            removeWhiteBackground(eImg).then(processed => {
-                enemyImageRef.current = processed;
-            });
-        } else {
-            enemyImageRef.current = eImg;
-        }
-    }, [level]);
+    }, [level, removeWhiteBackground]);
 
     // Input handling
     useEffect(() => {
@@ -481,7 +481,7 @@ export default function SpaceInvadersGame() {
 
         animationFrameRef.current = requestAnimationFrame(loop);
         return () => cancelAnimationFrame(animationFrameRef.current);
-    }, [gameState, levelConfig, level, score, submitScore, clearSaveMutation, nextLevel, showAuthOverlay, canvasWidth]);
+    }, [gameState, levelConfig, level, score, submitScore, clearSaveMutation, nextLevel, showAuthOverlay, canvasWidth, selectedShipIndex]);
 
     return (
         <div className="flex flex-col items-center gap-4 relative">

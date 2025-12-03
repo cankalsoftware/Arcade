@@ -192,7 +192,7 @@ export default function DonkeyKongGame() {
         };
     }, []);
 
-    const handleLevelComplete = () => {
+    const handleLevelComplete = React.useCallback(() => {
         const nextLevel = levelRef.current + 1;
 
         // Auth Check
@@ -211,9 +211,9 @@ export default function DonkeyKongGame() {
         setLevel(nextLevel);
         levelRef.current = nextLevel;
         initGame(nextLevel);
-    };
+    }, [user, submitScore]);
 
-    const handleGameOver = () => {
+    const handleGameOver = React.useCallback(() => {
         if (lives > 1) {
             setLives(prev => prev - 1);
             initGame(levelRef.current); // Reset positions but keep level/score
@@ -221,7 +221,7 @@ export default function DonkeyKongGame() {
             setGameState('GAME_OVER');
             submitScore({ score: scoreRef.current, level: levelRef.current, gameType: 'donkey-kong' });
         }
-    };
+    }, [lives, submitScore]);
 
     // Game Loop
     useEffect(() => {
@@ -439,7 +439,7 @@ export default function DonkeyKongGame() {
 
         reqRef.current = requestAnimationFrame(loop);
         return () => cancelAnimationFrame(reqRef.current);
-    }, [gameState, level, user, submitScore, lives]);
+    }, [gameState, level, user, submitScore, lives, handleGameOver, handleLevelComplete]);
 
     const startGame = () => {
         setLevel(1);

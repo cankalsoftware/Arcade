@@ -187,7 +187,7 @@ export default function PacmanGame() {
         };
     }, [gameState]);
 
-    const handleLevelComplete = () => {
+    const handleLevelComplete = React.useCallback(() => {
         console.log('Level Complete! Current Level:', levelRef.current, 'Pellets Left:', pelletsRef.current);
         // Check Auth Restriction
         const nextLevel = levelRef.current + 1;
@@ -234,9 +234,9 @@ export default function PacmanGame() {
             pelletsRef.current = pCount;
             console.log('New Pellets Count:', pCount);
         }
-    };
+    }, [user, submitScore]);
 
-    const handleDeath = () => {
+    const handleDeath = React.useCallback(() => {
         if (livesRef.current > 1) {
             livesRef.current -= 1;
             setLives(livesRef.current);
@@ -258,7 +258,7 @@ export default function PacmanGame() {
                 gameType: "pacman"
             });
         }
-    };
+    }, [submitScore]);
 
     // Game Loop
     useEffect(() => {
@@ -542,7 +542,7 @@ export default function PacmanGame() {
 
         reqRef.current = requestAnimationFrame(loop);
         return () => cancelAnimationFrame(reqRef.current);
-    }, [gameState]);
+    }, [gameState, handleDeath, handleLevelComplete]);
 
     const startGame = () => {
         resetLevel(true);
