@@ -367,70 +367,72 @@ export default function TetrisGame() {
     }, [resetGame]);
 
     return (
-        <div className="flex flex-col items-center gap-2 pb-60 min-[1380px]:pb-0">
-            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[300px] text-xs min-[1380px]:text-xl font-mono text-yellow-400 px-4 min-[1380px]:px-0">
+        <div className="flex flex-col items-center gap-2 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:pb-0">
+            <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[300px] text-xs min-[1380px]:text-xl font-mono text-yellow-400 px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
                 <div>LINES: {lines % 10}/10</div>
             </div>
 
-            <div className="flex justify-center items-start gap-4">
-                <div className="relative border-4 border-yellow-400 bg-black shadow-[0_0_20px_rgba(255,255,0,0.3)] max-w-full">
-                    <canvas
-                        ref={canvasRef}
-                        width={cols * BLOCK_SIZE}
-                        height={ROWS * BLOCK_SIZE}
-                        className="block"
-                    />
+            <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
+                <div className="relative flex justify-center items-start gap-4 max-h-full max-w-full">
+                    <div className="relative border-4 border-yellow-400 bg-black shadow-[0_0_20px_rgba(255,255,0,0.3)] max-h-full aspect-[1/2] w-auto h-auto flex" style={{ aspectRatio: `${cols * BLOCK_SIZE} / ${ROWS * BLOCK_SIZE}` }}>
+                        <canvas
+                            ref={canvasRef}
+                            width={cols * BLOCK_SIZE}
+                            height={ROWS * BLOCK_SIZE}
+                            className="block w-full h-full object-contain"
+                        />
 
-                    {/* Overlays */}
-                    {gameState === 'START' && (
-                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-yellow-400 mb-4 animate-pulse">TETRIS</h2>
-                            <p className="text-gray-400 mb-8">Arrows to Move & Rotate</p>
-                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
-                                START GAME
-                            </Button>
-                        </div>
-                    )}
-
-                    {gameState === 'GAME_OVER' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
-                            <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
-                            <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
-                                TRY AGAIN
-                            </Button>
-                        </div>
-                    )}
-
-                    {gameState === 'AUTH_REQUIRED' && (
-                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
-                            <h2 className="text-3xl font-bold text-yellow-400 mb-4">LEVEL 3 LOCKED</h2>
-                            <p className="text-gray-300 mb-8">Please sign in to continue!</p>
-                            <SignInButton mode="modal">
-                                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
-                                    SIGN IN TO CONTINUE
+                        {/* Overlays */}
+                        {gameState === 'START' && (
+                            <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
+                                <h2 className="text-4xl font-bold text-yellow-400 mb-4 animate-pulse">TETRIS</h2>
+                                <p className="text-gray-400 mb-8">Arrows to Move & Rotate</p>
+                                <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
+                                    START GAME
                                 </Button>
-                            </SignInButton>
-                        </div>
-                    )}
-                </div>
+                            </div>
+                        )}
 
-                {/* Next Piece Display - Hidden on smaller screens for now if needed, or kept */}
-                <div className="hidden min-[1380px]:block border-2 border-yellow-400 bg-black p-1">
-                    <canvas
-                        ref={nextCanvasRef}
-                        width={80}
-                        height={80}
-                        className="block"
-                    />
-                    <div className="text-yellow-400 text-xs text-center mt-1">NEXT</div>
+                        {gameState === 'GAME_OVER' && (
+                            <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
+                                <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
+                                <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
+                                <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
+                                    TRY AGAIN
+                                </Button>
+                            </div>
+                        )}
+
+                        {gameState === 'AUTH_REQUIRED' && (
+                            <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                                <h2 className="text-3xl font-bold text-yellow-400 mb-4">LEVEL 3 LOCKED</h2>
+                                <p className="text-gray-300 mb-8">Please sign in to continue!</p>
+                                <SignInButton mode="modal">
+                                    <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
+                                        SIGN IN TO CONTINUE
+                                    </Button>
+                                </SignInButton>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Next Piece Display - Hidden on smaller screens for now if needed, or kept */}
+                    <div className="hidden min-[1380px]:block shrink-0 border-2 border-yellow-400 bg-black p-1">
+                        <canvas
+                            ref={nextCanvasRef}
+                            width={80}
+                            height={80}
+                            className="block"
+                        />
+                        <div className="text-yellow-400 text-xs text-center mt-1">NEXT</div>
+                    </div>
                 </div>
             </div>
 
-            {/* Controls Legend */}
-            <div className="mt-4 text-gray-400 font-mono text-sm flex flex-wrap justify-center gap-6 bg-gray-900/50 p-4 rounded-lg border border-gray-800">
+            {/* Controls Legend - hidden on narrow screens to save space? or scale it down */}
+            <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-400 font-mono text-[10px] min-[1380px]:text-sm flex flex-wrap justify-center gap-4 bg-gray-900/50 p-2 rounded-lg border border-gray-800 min-[1380px]:p-4 min-[1380px]:gap-6 hidden min-[400px]:flex">
                 <div className="flex items-center gap-2">
                     <span className="bg-gray-800 px-2 py-1 rounded text-yellow-400">←</span> <span>Left</span>
                 </div>
@@ -445,7 +447,7 @@ export default function TetrisGame() {
                 </div>
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="TETRIS" className="min-[1380px]:hidden" />
+            <MobileControls onInput={handleMobileInput} gameType="TETRIS" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }

@@ -571,70 +571,73 @@ export default function PacmanGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4 pb-60 min-[1380px]:pb-0">
-            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-xs min-[1380px]:text-xl font-mono text-yellow-400 px-4 min-[1380px]:px-0">
+        <div className="flex flex-col items-center gap-4 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:pb-0">
+            <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-xs min-[1380px]:text-xl font-mono text-yellow-400 px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
                 <div>LIVES: {lives}</div>
             </div>
 
-            <div className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] w-full max-w-[400px] aspect-[19/21]">
-                <canvas
-                    ref={canvasRef}
-                    width={380}
-                    height={420}
-                    className="block w-full h-full object-contain"
-                />
+            <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
+                <div className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] max-h-full max-w-full aspect-[19/21] w-auto h-auto flex">
+                    <canvas
+                        ref={canvasRef}
+                        width={380}
+                        height={420}
+                        className="block w-full h-full object-contain"
+                    />
 
-                {gameState === 'START' && (
-                    <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                        <h2 className="text-4xl font-bold text-yellow-500 mb-4 animate-pulse">PACMAN</h2>
-                        <p className="text-gray-400 mb-8">Use Arrow Keys to Move</p>
-                        <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
-                            INSERT COIN
-                        </Button>
-                    </div>
-                )}
-
-                {gameState === 'GAME_OVER' && (
-                    <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                        <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
-                        <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
-                        <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
-                            TRY AGAIN
-                        </Button>
-                    </div>
-                )}
-
-                {gameState === 'VICTORY' && (
-                    <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                        <h2 className="text-4xl font-bold text-yellow-400 mb-4">YOU WIN!</h2>
-                        <p className="text-white text-xl mb-8">All 50 Levels Cleared!</p>
-                        <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
-                        <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
-                            PLAY AGAIN
-                        </Button>
-                    </div>
-                )}
-
-                {gameState === 'AUTH_REQUIRED' && (
-                    <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
-                        <h2 className="text-3xl font-bold text-yellow-400 mb-4">LEVEL 3 LOCKED</h2>
-                        <p className="text-gray-300 mb-8">Please sign in to continue your streak!</p>
-                        <SignInButton mode="modal">
-                            <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
-                                SIGN IN TO CONTINUE
+                    {gameState === 'START' && (
+                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
+                            <h2 className="text-4xl font-bold text-yellow-500 mb-4 animate-pulse">PACMAN</h2>
+                            <p className="text-gray-400 mb-8">Use Arrow Keys to Move</p>
+                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
+                                INSERT COIN
                             </Button>
-                        </SignInButton>
-                    </div>
-                )}
+                        </div>
+                    )}
+
+                    {gameState === 'GAME_OVER' && (
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
+                            <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
+                            <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
+                            <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
+                                TRY AGAIN
+                            </Button>
+                        </div>
+                    )}
+
+                    {gameState === 'VICTORY' && (
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
+                            <h2 className="text-4xl font-bold text-yellow-400 mb-4">YOU WIN!</h2>
+                            <p className="text-white text-xl mb-8">All 50 Levels Cleared!</p>
+                            <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
+                            <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
+                                PLAY AGAIN
+                            </Button>
+                        </div>
+                    )}
+
+                    {gameState === 'AUTH_REQUIRED' && (
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                            <h2 className="text-3xl font-bold text-yellow-400 mb-4">LEVEL 3 LOCKED</h2>
+                            <p className="text-gray-300 mb-8">Please sign in to continue your streak!</p>
+                            <SignInButton mode="modal">
+                                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
+                                    SIGN IN TO CONTINUE
+                                </Button>
+                            </SignInButton>
+                        </div>
+                    )}
+
+                </div>
             </div>
 
-            <div className="text-gray-500 text-sm font-mono mt-4">
+            <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-500 text-[10px] min-[1380px]:text-sm font-mono mt-4 hidden min-[400px]:block">
                 Avoid the Ghosts! Clear all pellets to advance.
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="PACMAN" className="min-[1380px]:hidden" />
+            <MobileControls onInput={handleMobileInput} gameType="PACMAN" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }

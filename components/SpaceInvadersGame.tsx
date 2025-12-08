@@ -496,133 +496,136 @@ export default function SpaceInvadersGame() {
     }, [gameState, levelConfig, level, score, submitScore, clearSaveMutation, nextLevel, showAuthOverlay, canvasWidth, selectedShipIndex]);
 
     return (
-        <div className="flex flex-col items-center gap-4 relative pb-60 min-[1380px]:pb-0">
-            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[800px] text-white font-mono text-xs min-[1380px]:text-xl px-4 min-[1380px]:px-0">
+        <div className="flex flex-col items-center gap-4 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:pb-0">
+            <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[800px] text-white font-mono text-xs min-[1380px]:text-xl px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
                 <div>LIVES: {lives}</div>
             </div>
 
-            <div className="relative">
-                <canvas
-                    ref={canvasRef}
-                    width={canvasWidth}
-                    height={CANVAS_HEIGHT}
-                    className="block w-full h-full object-contain"
-                />
+            <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
+                <div className="relative max-h-full max-w-full aspect-[4/3] w-auto h-auto flex" style={{ aspectRatio: `${canvasWidth} / ${CANVAS_HEIGHT}` }}>
+                    <canvas
+                        ref={canvasRef}
+                        width={canvasWidth}
+                        height={CANVAS_HEIGHT}
+                        className="block w-full h-full object-contain bg-black"
+                    />
 
-                {showAuthOverlay && (
-                    <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
-                        <h2 className="text-3xl font-bold text-red-500 mb-4">LEVEL 3 LOCKED</h2>
-                        <p className="text-gray-300 mb-8">You need to be logged in to play past Level 2!</p>
-                        <SignInButton mode="modal">
-                            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-xl font-bold">
-                                Sign In to Continue
+                    {showAuthOverlay && (
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                            <h2 className="text-3xl font-bold text-red-500 mb-4">LEVEL 3 LOCKED</h2>
+                            <p className="text-gray-300 mb-8">You need to be logged in to play past Level 2!</p>
+                            <SignInButton mode="modal">
+                                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-xl font-bold">
+                                    Sign In to Continue
+                                </Button>
+                            </SignInButton>
+                            <Button
+                                variant="ghost"
+                                className="mt-4 text-gray-500 hover:text-white"
+                                onClick={() => setShowAuthOverlay(false)}
+                            >
+                                Cancel
                             </Button>
-                        </SignInButton>
-                        <Button
-                            variant="ghost"
-                            className="mt-4 text-gray-500 hover:text-white"
-                            onClick={() => setShowAuthOverlay(false)}
-                        >
-                            Cancel
-                        </Button>
-                    </div>
-                )}
+                        </div>
+                    )}
 
-                {gameState === 'START' && !showAuthOverlay && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
-                        <h1 className="text-6xl font-bold mb-8 text-green-500 font-mono tracking-widest">SPACE INVADERS</h1>
-                        <button
-                            onClick={() => startGame(false)}
-                            className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded text-2xl font-bold transition-all transform hover:scale-105 mb-4"
-                        >
-                            NEW GAME
-                        </button>
-                        {loadGameQuery && (
+                    {gameState === 'START' && !showAuthOverlay && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
+                            <h1 className="text-6xl font-bold mb-8 text-green-500 font-mono tracking-widest">SPACE INVADERS</h1>
                             <button
-                                onClick={() => startGame(true)}
-                                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded text-2xl font-bold transition-all transform hover:scale-105"
+                                onClick={() => startGame(false)}
+                                className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded text-2xl font-bold transition-all transform hover:scale-105 mb-4"
                             >
-                                RESUME GAME (Lvl {loadGameQuery.level})
+                                NEW GAME
                             </button>
-                        )}
-                        <p className="mt-4 text-gray-400">Use Arrow Keys to Move • Space to Shoot</p>
-                    </div>
-                )}
-
-                {gameState === 'SHIP_SELECTION' && !showAuthOverlay && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
-                        <h2 className="text-4xl font-bold mb-8 text-blue-400">SELECT YOUR SHIP</h2>
-                        <div className="flex gap-8 mb-8">
-                            {PLAYER_SHIPS.map((ship, index) => (
+                            {loadGameQuery && (
                                 <button
-                                    key={index}
-                                    onClick={() => setSelectedShipIndex(index)}
-                                    className={`p-4 border-2 rounded-lg transition-all ${selectedShipIndex === index ? 'border-green-500 bg-green-500/20 scale-110' : 'border-gray-600 hover:border-gray-400'}`}
+                                    onClick={() => startGame(true)}
+                                    className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded text-2xl font-bold transition-all transform hover:scale-105"
                                 >
-                                    <NextImage src={ship} alt={`Ship ${index + 1}`} width={64} height={64} className="w-16 h-16 object-contain" />
+                                    RESUME GAME (Lvl {loadGameQuery.level})
                                 </button>
-                            ))}
+                            )}
+                            <p className="mt-4 text-gray-400">Use Arrow Keys to Move • Space to Shoot</p>
                         </div>
-                        <button
-                            onClick={confirmShipSelection}
-                            className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded text-2xl font-bold transition-all"
-                        >
-                            LAUNCH
-                        </button>
-                    </div>
-                )}
+                    )}
 
-                {gameState === 'LEVEL_TRANSITION' && !showAuthOverlay && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
-                        <h2 className="text-4xl font-bold mb-4 text-green-400">LEVEL {level} COMPLETE!</h2>
-                        <div className="flex gap-4">
+                    {gameState === 'SHIP_SELECTION' && !showAuthOverlay && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
+                            <h2 className="text-4xl font-bold mb-8 text-blue-400">SELECT YOUR SHIP</h2>
+                            <div className="flex gap-8 mb-8">
+                                {PLAYER_SHIPS.map((ship, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedShipIndex(index)}
+                                        className={`p-4 border-2 rounded-lg transition-all ${selectedShipIndex === index ? 'border-green-500 bg-green-500/20 scale-110' : 'border-gray-600 hover:border-gray-400'}`}
+                                    >
+                                        <NextImage src={ship} alt={`Ship ${index + 1}`} width={64} height={64} className="w-16 h-16 object-contain" />
+                                    </button>
+                                ))}
+                            </div>
                             <button
-                                onClick={startNextLevel}
-                                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded text-xl font-bold"
+                                onClick={confirmShipSelection}
+                                className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded text-2xl font-bold transition-all"
                             >
-                                NEXT LEVEL
-                            </button>
-                            <button
-                                onClick={saveAndQuit}
-                                className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded text-xl font-bold"
-                            >
-                                SAVE & QUIT
+                                LAUNCH
                             </button>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {gameState === 'GAME_OVER' && !showAuthOverlay && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
-                        <h2 className="text-5xl font-bold mb-4 text-red-500">GAME OVER</h2>
-                        <p className="text-2xl mb-8">Final Score: {score}</p>
-                        <button
-                            onClick={() => setGameState('START')}
-                            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded text-xl font-bold"
-                        >
-                            MAIN MENU
-                        </button>
-                    </div>
-                )}
+                    {gameState === 'LEVEL_TRANSITION' && !showAuthOverlay && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
+                            <h2 className="text-4xl font-bold mb-4 text-green-400">LEVEL {level} COMPLETE!</h2>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={startNextLevel}
+                                    className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded text-xl font-bold"
+                                >
+                                    NEXT LEVEL
+                                </button>
+                                <button
+                                    onClick={saveAndQuit}
+                                    className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded text-xl font-bold"
+                                >
+                                    SAVE & QUIT
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
-                {gameState === 'VICTORY' && !showAuthOverlay && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
-                        <h2 className="text-5xl font-bold mb-4 text-yellow-400">VICTORY!</h2>
-                        <p className="text-2xl mb-8">Final Score: {score}</p>
-                        <button
-                            onClick={() => setGameState('START')}
-                            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded text-xl font-bold"
-                        >
-                            MAIN MENU
-                        </button>
-                    </div>
-                )}
+                    {gameState === 'GAME_OVER' && !showAuthOverlay && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
+                            <h2 className="text-5xl font-bold mb-4 text-red-500">GAME OVER</h2>
+                            <p className="text-2xl mb-8">Final Score: {score}</p>
+                            <button
+                                onClick={() => setGameState('START')}
+                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded text-xl font-bold"
+                            >
+                                MAIN MENU
+                            </button>
+                        </div>
+                    )}
+
+                    {gameState === 'VICTORY' && !showAuthOverlay && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
+                            <h2 className="text-5xl font-bold mb-4 text-yellow-400">VICTORY!</h2>
+                            <p className="text-2xl mb-8">Final Score: {score}</p>
+                            <button
+                                onClick={() => setGameState('START')}
+                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded text-xl font-bold"
+                            >
+                                MAIN MENU
+                            </button>
+                        </div>
+                    )}
+
+                </div>
             </div>
 
-            {/* Controls Legend */}
-            <div className="mt-4 text-gray-400 font-mono text-sm flex flex-wrap justify-center gap-6 bg-gray-900/50 p-4 rounded-lg border border-gray-800">
+            {/* Controls Legend - hidden on nice screens */}
+            <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-400 font-mono text-[10px] min-[1380px]:text-sm flex flex-wrap justify-center gap-4 bg-gray-900/50 p-2 rounded-lg border border-gray-800 min-[1380px]:p-4 min-[1380px]:gap-6 hidden min-[400px]:flex">
                 <div className="flex items-center gap-2">
                     <span className="bg-gray-800 px-2 py-1 rounded text-green-400">←</span> <span>Left</span>
                 </div>
@@ -634,7 +637,7 @@ export default function SpaceInvadersGame() {
                 </div>
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="SPACE_INVADERS" className="min-[1380px]:hidden" />
+            <MobileControls onInput={handleMobileInput} gameType="SPACE_INVADERS" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }
