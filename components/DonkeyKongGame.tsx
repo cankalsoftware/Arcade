@@ -5,6 +5,7 @@ import { useUser, SignInButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 500;
@@ -191,6 +192,22 @@ export default function DonkeyKongGame() {
             window.removeEventListener('keyup', handleKeyUp);
         };
     }, []);
+
+    const handleMobileInput = (action: ControlAction, active: boolean) => {
+        const keyMap: Record<ControlAction, string> = {
+            'UP': 'ArrowUp',
+            'DOWN': 'ArrowDown',
+            'LEFT': 'ArrowLeft',
+            'RIGHT': 'ArrowRight',
+            'A': 'Space',
+            'B': 'Space',
+        };
+        const key = keyMap[action];
+        // Donkey Kong implementation relies on keysRef
+        if (key) {
+            keysRef.current[key] = active;
+        }
+    };
 
     const handleLevelComplete = React.useCallback(() => {
         const nextLevel = levelRef.current + 1;
@@ -452,25 +469,25 @@ export default function DonkeyKongGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4">
-            <div className="flex justify-between w-full max-w-[600px] text-xl font-mono text-red-500">
+        <div className="flex flex-col items-center gap-4 w-full pb-60 min-[1380px]:pb-0">
+            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[600px] text-xs min-[1380px]:text-xl font-mono text-red-500 px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
                 <div>LIVES: {lives}</div>
             </div>
 
-            <div className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)]">
+            <div className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] w-full max-w-[600px] aspect-[6/5]">
                 <canvas
                     ref={canvasRef}
                     width={CANVAS_WIDTH}
                     height={CANVAS_HEIGHT}
-                    className="block"
+                    className="block w-full h-full object-contain"
                 />
 
-                {/* Start Screen */}
+                {/* Overlays */}
                 {gameState === 'START' && (
-                    <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center p-4">
-                        <h2 className="text-4xl font-bold text-orange-500 mb-4 animate-pulse">DONKEY KONG</h2>
+                    <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
+                        <h2 className="text-4xl font-bold text-red-600 mb-4 animate-pulse">DONKEY KONG</h2>
                         <p className="text-gray-400 mb-8">Save the Princess!</p>
                         <Button onClick={startGame} className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-8 py-4 text-xl">
                             INSERT COIN
@@ -517,6 +534,8 @@ export default function DonkeyKongGame() {
             <div className="text-gray-500 text-sm font-mono mt-4">
                 ARROWS to Move/Climb • SPACE to Jump
             </div>
+
+            <MobileControls onInput={handleMobileInput} gameType="DONKEY_KONG" className="min-[1380px]:hidden" />
         </div>
     );
 }

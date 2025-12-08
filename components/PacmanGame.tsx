@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useUser, SignInButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
+import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -186,6 +187,29 @@ export default function PacmanGame() {
             window.removeEventListener('keyup', handleKeyUp);
         };
     }, [gameState]);
+
+    const handleMobileInput = (action: ControlAction, active: boolean) => {
+        let dir: Direction = 'NONE';
+        if (action === 'UP') dir = 'UP';
+        else if (action === 'DOWN') dir = 'DOWN';
+        else if (action === 'LEFT') dir = 'LEFT';
+        else if (action === 'RIGHT') dir = 'RIGHT';
+
+        if (dir !== 'NONE') {
+            if (active) {
+                heldDirectionsRef.current = heldDirectionsRef.current.filter(d => d !== dir);
+                heldDirectionsRef.current.push(dir);
+                pacmanRef.current.nextDir = dir;
+            } else {
+                heldDirectionsRef.current = heldDirectionsRef.current.filter(d => d !== dir);
+                if (heldDirectionsRef.current.length > 0) {
+                    pacmanRef.current.nextDir = heldDirectionsRef.current[heldDirectionsRef.current.length - 1];
+                } else {
+                    pacmanRef.current.nextDir = 'NONE';
+                }
+            }
+        }
+    };
 
     const handleLevelComplete = React.useCallback(() => {
         console.log('Level Complete! Current Level:', levelRef.current, 'Pellets Left:', pelletsRef.current);
@@ -550,25 +574,24 @@ export default function PacmanGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4">
-            <div className="flex justify-between w-full max-w-[400px] text-xl font-mono text-yellow-400">
+        <div className="flex flex-col items-center gap-4 pb-60 min-[1380px]:pb-0">
+            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-xs min-[1380px]:text-xl font-mono text-yellow-400 px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
                 <div>LIVES: {lives}</div>
             </div>
 
-            <div className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)]">
+            <div className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] w-full max-w-[400px] aspect-[19/21]">
                 <canvas
                     ref={canvasRef}
-                    width={mapCols * TILE_SIZE}
-                    height={mapRows * TILE_SIZE}
-                    className="block"
+                    width={380}
+                    height={420}
+                    className="block w-full h-full object-contain"
                 />
 
-                {/* Overlays */}
                 {gameState === 'START' && (
                     <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                        <h2 className="text-4xl font-bold text-yellow-400 mb-4 animate-pulse">PAC-MAN</h2>
+                        <h2 className="text-4xl font-bold text-yellow-500 mb-4 animate-pulse">PACMAN</h2>
                         <p className="text-gray-400 mb-8">Use Arrow Keys to Move</p>
                         <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
                             INSERT COIN
@@ -610,11 +633,11 @@ export default function PacmanGame() {
                 )}
             </div>
 
-
-
             <div className="text-gray-500 text-sm font-mono mt-4">
                 Avoid the Ghosts! Clear all pellets to advance.
             </div>
+
+            <MobileControls onInput={handleMobileInput} gameType="PACMAN" className="min-[1380px]:hidden" />
         </div>
     );
 }

@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useUser, SignInButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
+import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -292,6 +293,18 @@ export default function TetrisGame() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [gameState, playerMove, playerDrop, playerRotate]);
 
+    const handleMobileInput = (action: ControlAction, active: boolean) => {
+        if (!active) return; // Only trigger on press for now
+        if (gameState !== 'PLAYING') return;
+
+        if (action === 'LEFT') playerMove(-1);
+        if (action === 'RIGHT') playerMove(1);
+        if (action === 'DOWN') playerDrop();
+        if (action === 'UP') playerRotate();
+        if (action === 'A') playerRotate(); // A button rotates
+        if (action === 'B') playerDrop();   // B button drops
+    };
+
     // Game Loop
     useEffect(() => {
         if (gameState !== 'PLAYING') {
@@ -354,64 +367,66 @@ export default function TetrisGame() {
     }, [resetGame]);
 
     return (
-        <div className="flex flex-col items-center gap-2">
-            <div className="flex justify-between w-full max-w-[300px] text-xl font-mono text-yellow-400">
+        <div className="flex flex-col items-center gap-2 pb-60 min-[1380px]:pb-0">
+            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[300px] text-xs min-[1380px]:text-xl font-mono text-yellow-400 px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
                 <div>LINES: {lines % 10}/10</div>
             </div>
 
-            <div className="relative border-4 border-yellow-400 bg-black shadow-[0_0_20px_rgba(255,255,0,0.3)] max-w-full">
-                <canvas
-                    ref={canvasRef}
-                    width={cols * BLOCK_SIZE}
-                    height={ROWS * BLOCK_SIZE}
-                    className="block max-w-full h-auto"
-                />
+            <div className="flex justify-center items-start gap-4">
+                <div className="relative border-4 border-yellow-400 bg-black shadow-[0_0_20px_rgba(255,255,0,0.3)] max-w-full">
+                    <canvas
+                        ref={canvasRef}
+                        width={cols * BLOCK_SIZE}
+                        height={ROWS * BLOCK_SIZE}
+                        className="block"
+                    />
 
-                {/* Next Piece Preview */}
-                <div className="absolute -right-32 top-0 border-2 border-yellow-400 bg-black p-2 hidden md:block">
-                    <div className="text-yellow-400 font-mono text-sm text-center mb-2">NEXT</div>
+                    {/* Overlays */}
+                    {gameState === 'START' && (
+                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
+                            <h2 className="text-4xl font-bold text-yellow-400 mb-4 animate-pulse">TETRIS</h2>
+                            <p className="text-gray-400 mb-8">Arrows to Move & Rotate</p>
+                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
+                                START GAME
+                            </Button>
+                        </div>
+                    )}
+
+                    {gameState === 'GAME_OVER' && (
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
+                            <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
+                            <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
+                            <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
+                                TRY AGAIN
+                            </Button>
+                        </div>
+                    )}
+
+                    {gameState === 'AUTH_REQUIRED' && (
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                            <h2 className="text-3xl font-bold text-yellow-400 mb-4">LEVEL 3 LOCKED</h2>
+                            <p className="text-gray-300 mb-8">Please sign in to continue!</p>
+                            <SignInButton mode="modal">
+                                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
+                                    SIGN IN TO CONTINUE
+                                </Button>
+                            </SignInButton>
+                        </div>
+                    )}
+                </div>
+
+                {/* Next Piece Display - Hidden on smaller screens for now if needed, or kept */}
+                <div className="hidden min-[1380px]:block border-2 border-yellow-400 bg-black p-1">
                     <canvas
                         ref={nextCanvasRef}
                         width={80}
                         height={80}
                         className="block"
                     />
+                    <div className="text-yellow-400 text-xs text-center mt-1">NEXT</div>
                 </div>
-
-                {/* Overlays */}
-                {gameState === 'START' && (
-                    <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                        <h2 className="text-4xl font-bold text-yellow-400 mb-4 animate-pulse">TETRIS</h2>
-                        <p className="text-gray-400 mb-8">Arrows to Move & Rotate</p>
-                        <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
-                            START GAME
-                        </Button>
-                    </div>
-                )}
-
-                {gameState === 'GAME_OVER' && (
-                    <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                        <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
-                        <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
-                        <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
-                            TRY AGAIN
-                        </Button>
-                    </div>
-                )}
-
-                {gameState === 'AUTH_REQUIRED' && (
-                    <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
-                        <h2 className="text-3xl font-bold text-yellow-400 mb-4">LEVEL 3 LOCKED</h2>
-                        <p className="text-gray-300 mb-8">Please sign in to continue!</p>
-                        <SignInButton mode="modal">
-                            <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
-                                SIGN IN TO CONTINUE
-                            </Button>
-                        </SignInButton>
-                    </div>
-                )}
             </div>
 
             {/* Controls Legend */}
@@ -429,6 +444,8 @@ export default function TetrisGame() {
                     <span className="bg-gray-800 px-2 py-1 rounded text-yellow-400">↓</span> <span>Drop</span>
                 </div>
             </div>
+
+            <MobileControls onInput={handleMobileInput} gameType="TETRIS" className="min-[1380px]:hidden" />
         </div>
     );
 }

@@ -5,12 +5,13 @@ import { useUser, SignInButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 
 const GRID_SIZE = 40;
 const COLS = 15;
 const ROWS = 13; // 1 (Top) + 5 (River) + 1 (Safe) + 5 (Road) + 1 (Start)
-const CANVAS_WIDTH = COLS * GRID_SIZE;
-const CANVAS_HEIGHT = ROWS * GRID_SIZE;
+const CANVAS_WIDTH = COLS * GRID_SIZE; // 600
+const CANVAS_HEIGHT = ROWS * GRID_SIZE; // 520
 
 // Assets
 const ASSETS = {
@@ -159,6 +160,22 @@ export default function FroggerGame() {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [gameState]);
+
+    const handleMobileInput = (action: ControlAction, active: boolean) => {
+        if (!active) return;
+        if (gameState !== 'PLAYING') return;
+
+        const frog = frogRef.current;
+        if (action === 'UP') frog.y -= GRID_SIZE;
+        else if (action === 'DOWN') frog.y += GRID_SIZE;
+        else if (action === 'LEFT') frog.x -= GRID_SIZE;
+        else if (action === 'RIGHT') frog.x += GRID_SIZE;
+
+        // Bounds
+        if (frog.x < 0) frog.x = 0;
+        if (frog.x > CANVAS_WIDTH - GRID_SIZE) frog.x = CANVAS_WIDTH - GRID_SIZE;
+        if (frog.y > CANVAS_HEIGHT - GRID_SIZE) frog.y = CANVAS_HEIGHT - GRID_SIZE;
+    };
 
     const handleDeath = React.useCallback(() => {
         if (lives > 1) {
@@ -348,24 +365,24 @@ export default function FroggerGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4">
-            <div className="flex justify-between w-full max-w-[600px] text-xl font-mono text-green-500">
+        <div className="flex flex-col items-center gap-4 pb-60 min-[1380px]:pb-0">
+            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[600px] text-xs min-[1380px]:text-xl font-mono text-green-500 px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
                 <div>TIME: {timeLeft}</div>
             </div>
 
-            <div className="relative border-4 border-green-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,255,0,0.3)]">
+            <div className="relative border-4 border-green-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,255,0,0.3)] w-full max-w-[600px] aspect-[15/13]">
                 <canvas
                     ref={canvasRef}
                     width={CANVAS_WIDTH}
                     height={CANVAS_HEIGHT}
-                    className="block"
+                    className="block w-full h-full object-contain"
                 />
 
-                {/* Start Screen */}
+                {/* Overlays */}
                 {gameState === 'START' && (
-                    <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center p-4">
+                    <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
                         <h2 className="text-4xl font-bold text-green-500 mb-4 animate-pulse">FROGGER</h2>
                         <p className="text-gray-400 mb-8">Cross the Road & River!</p>
                         <Button onClick={startGame} className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-4 text-xl">
@@ -413,6 +430,8 @@ export default function FroggerGame() {
             <div className="text-gray-500 text-sm font-mono mt-4">
                 ARROWS to Hop
             </div>
+
+            <MobileControls onInput={handleMobileInput} gameType="FROGGER" className="min-[1380px]:hidden" />
         </div>
     );
 }

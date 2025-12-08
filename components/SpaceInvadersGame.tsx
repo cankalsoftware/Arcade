@@ -12,6 +12,7 @@ import {
 import NextImage from 'next/image';
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 
 const getCanvasWidth = (level: number) => 800 + Math.floor((level - 1) / 10) * 100;
 
@@ -130,6 +131,21 @@ export default function SpaceInvadersGame() {
             window.removeEventListener('keyup', handleKeyUp);
         };
     }, []);
+
+    const handleMobileInput = (action: ControlAction, active: boolean) => {
+        const keyMap: Record<ControlAction, string> = {
+            'UP': 'ArrowUp', // Shoot alt
+            'DOWN': 'ArrowDown',
+            'LEFT': 'ArrowLeft',
+            'RIGHT': 'ArrowRight',
+            'A': 'Space', // Shoot
+            'B': 'Space',
+        };
+        const key = keyMap[action];
+        if (key) {
+            keysRef.current[key] = active;
+        }
+    };
 
     const initEnemies = () => {
         if (!levelConfig) return;
@@ -438,10 +454,6 @@ export default function SpaceInvadersGame() {
             // Enemies
             activeEnemies.forEach(e => {
                 if (enemyImageRef.current) {
-                    // Apply hue rotation for variants
-                    // Level 1-4: No filter (0-3 index)
-                    // Level 5-10: Filter (4-9 index)
-                    // Also apply to Enemy 2 (index 1) which is now a variant
                     const enemyIndex = (level - 1) % ENEMY_SHIPS.length;
 
                     if (enemyIndex >= 4 || enemyIndex === 1) {
@@ -484,8 +496,8 @@ export default function SpaceInvadersGame() {
     }, [gameState, levelConfig, level, score, submitScore, clearSaveMutation, nextLevel, showAuthOverlay, canvasWidth, selectedShipIndex]);
 
     return (
-        <div className="flex flex-col items-center gap-4 relative">
-            <div className="flex justify-between w-full max-w-[800px] text-white font-mono text-xl">
+        <div className="flex flex-col items-center gap-4 relative pb-60 min-[1380px]:pb-0">
+            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[800px] text-white font-mono text-xs min-[1380px]:text-xl px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
                 <div>LIVES: {lives}</div>
@@ -496,13 +508,12 @@ export default function SpaceInvadersGame() {
                     ref={canvasRef}
                     width={canvasWidth}
                     height={CANVAS_HEIGHT}
-                    className="border-4 border-gray-700 rounded-lg bg-black shadow-2xl transition-all duration-500"
+                    className="block w-full h-full object-contain"
                 />
 
-                {/* Auth Overlay */}
                 {showAuthOverlay && (
-                    <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center p-8 text-center z-50">
-                        <h2 className="text-3xl font-bold text-green-400 mb-4">LOGIN REQUIRED</h2>
+                    <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                        <h2 className="text-3xl font-bold text-red-500 mb-4">LEVEL 3 LOCKED</h2>
                         <p className="text-gray-300 mb-8">You need to be logged in to play past Level 2!</p>
                         <SignInButton mode="modal">
                             <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-xl font-bold">
@@ -622,6 +633,8 @@ export default function SpaceInvadersGame() {
                     <span className="bg-gray-800 px-2 py-1 rounded text-green-400">SPACE</span> <span>Shoot</span>
                 </div>
             </div>
+
+            <MobileControls onInput={handleMobileInput} gameType="SPACE_INVADERS" className="min-[1380px]:hidden" />
         </div>
     );
 }

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import NextImage from 'next/image';
+import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 
 const CANVAS_WIDTH = 400;
 const CANVAS_HEIGHT = 600;
@@ -127,6 +128,21 @@ export default function RacingGame() {
             window.removeEventListener('keyup', handleKeyUp);
         };
     }, []);
+
+    const handleMobileInput = (action: ControlAction, active: boolean) => {
+        const keyMap: Record<ControlAction, string> = {
+            'UP': 'ArrowUp', // Unused but safe
+            'DOWN': 'ArrowDown', // Unused
+            'LEFT': 'ArrowLeft',
+            'RIGHT': 'ArrowRight',
+            'A': 'Space', // Boost
+            'B': 'Space',
+        };
+        const key = keyMap[action];
+        if (key) {
+            keysRef.current[key] = active;
+        }
+    };
 
     const handleLevelComplete = React.useCallback(() => {
         const nextLevel = levelRef.current + 1;
@@ -308,28 +324,27 @@ export default function RacingGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4">
-            <div className="flex justify-between w-full max-w-[400px] text-xl font-mono text-red-500">
+        <div className="flex flex-col items-center gap-4 pb-60 min-[1380px]:pb-0">
+            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-xs min-[1380px]:text-xl font-mono text-red-500 px-4 min-[1380px]:px-0">
                 <div>SCORE: {score}</div>
                 <div>LEVEL: {level}</div>
             </div>
-            <div className="flex justify-between w-full max-w-[400px] text-sm font-mono text-yellow-400">
+            <div className="flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-[10px] min-[1380px]:text-sm font-mono text-yellow-400 px-4 min-[1380px]:px-0">
                 <div>DODGED: {dodged}/10</div>
                 <div>TIME: {time}s</div>
             </div>
 
-            <div className="relative border-4 border-gray-700 rounded-lg bg-black shadow-[0_0_20px_rgba(255,0,0,0.3)]">
+            <div className="relative border-4 border-gray-700 rounded-lg bg-black shadow-[0_0_20px_rgba(255,0,0,0.3)] w-full max-w-[400px] aspect-[2/3]">
                 <canvas
                     ref={canvasRef}
                     width={CANVAS_WIDTH}
                     height={CANVAS_HEIGHT}
-                    className="block"
+                    className="block w-full h-full object-contain"
                 />
 
-                {/* Start Screen */}
                 {gameState === 'START' && (
-                    <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center p-4">
-                        <h2 className="text-4xl font-bold text-red-500 mb-4 animate-pulse">RETRO RACING</h2>
+                    <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
+                        <h2 className="text-4xl font-bold text-red-600 mb-4 animate-pulse">RACING</h2>
                         <p className="text-gray-400 mb-4">Select Your Car:</p>
                         <div className="flex gap-4 mb-8">
                             {CAR_TYPES.map((car, idx) => (
@@ -388,6 +403,8 @@ export default function RacingGame() {
             <div className="text-gray-500 text-sm font-mono mt-4">
                 ARROWS to Steer • SPACE to Boost
             </div>
+
+            <MobileControls onInput={handleMobileInput} gameType="RACING" className="min-[1380px]:hidden" />
         </div>
     );
 }
