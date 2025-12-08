@@ -52,8 +52,7 @@ export default function PacmanGame() {
     const [gameState, setGameState] = useState<'START' | 'PLAYING' | 'GAME_OVER' | 'VICTORY' | 'AUTH_REQUIRED'>('START');
 
     // Map State
-    const [mapRows, setMapRows] = useState(21);
-    const [mapCols, setMapCols] = useState(19);
+
 
     // Refs for game loop to avoid stale closures
     const mapRef = useRef<number[][]>([]);
@@ -105,8 +104,7 @@ export default function PacmanGame() {
         mapRef.current = config.map;
         rowsRef.current = config.rows;
         colsRef.current = config.cols;
-        setMapRows(config.rows);
-        setMapCols(config.cols);
+
         pacmanStartRef.current = config.pacmanStart;
         ghostStartRef.current = config.ghostStart;
 
@@ -238,8 +236,7 @@ export default function PacmanGame() {
             mapRef.current = config.map;
             rowsRef.current = config.rows;
             colsRef.current = config.cols;
-            setMapRows(config.rows);
-            setMapCols(config.cols);
+
             pacmanStartRef.current = config.pacmanStart;
             ghostStartRef.current = config.ghostStart;
 

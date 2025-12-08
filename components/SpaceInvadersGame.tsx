@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 // --- Constants & Types ---
@@ -50,7 +50,7 @@ export default function SpaceInvadersGame() {
     const clearSaveMutation = useMutation(api.games.clearSave);
 
     // Level Config
-    const levelConfig = {
+    const levelConfig = useMemo(() => ({
         config: {
             enemyRows: Math.min(6, 3 + Math.floor((level - 1) / 5)),
             enemyCols: Math.min(12, 6 + Math.floor((level - 1) / 3)),
@@ -58,7 +58,7 @@ export default function SpaceInvadersGame() {
             fireRate: Math.max(500, 2000 - level * 50),
             bunkers: Math.max(0, 4 - Math.floor((level - 1) / 10))
         }
-    };
+    }), [level]);
     // Load assets
     const removeWhiteBackground = useCallback((img: HTMLImageElement): Promise<HTMLImageElement> => {
         return new Promise((resolve) => {
@@ -243,7 +243,7 @@ export default function SpaceInvadersGame() {
         }, 100);
     };
 
-    const nextLevel = () => {
+    const nextLevel = useCallback(() => {
         // Auth Check
         if (level >= 2 && !user) {
             setShowAuthOverlay(true);
@@ -258,7 +258,7 @@ export default function SpaceInvadersGame() {
             setGameState('LEVEL_TRANSITION');
             saveGameMutation({ level: level + 1, score, lives });
         }
-    };
+    }, [level, user, score, lives, submitScore, clearSaveMutation, saveGameMutation]);
 
     const startNextLevel = () => {
         const nextLvl = level + 1;

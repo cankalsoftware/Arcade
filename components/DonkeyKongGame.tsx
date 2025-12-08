@@ -86,7 +86,7 @@ export default function DonkeyKongGame() {
     }, []);
 
     // Level Generation
-    const generateLevel = (lvl: number) => {
+    const generateLevel = React.useCallback((lvl: number) => {
         const course = Math.ceil(lvl / 10); // 1-5
         const platforms: Platform[] = [];
 
@@ -164,9 +164,9 @@ export default function DonkeyKongGame() {
         }
 
         platformsRef.current = platforms;
-    };
+    }, []);
 
-    const initGame = (lvl: number) => {
+    const initGame = React.useCallback((lvl: number) => {
         generateLevel(lvl);
         playerRef.current = {
             x: 50, y: 450, width: 20, height: 30,
@@ -174,7 +174,7 @@ export default function DonkeyKongGame() {
         };
         barrelsRef.current = [];
         barrelTimerRef.current = 0;
-    };
+    }, [generateLevel]);
 
     // Input Handling
     useEffect(() => {
@@ -228,7 +228,7 @@ export default function DonkeyKongGame() {
         setLevel(nextLevel);
         levelRef.current = nextLevel;
         initGame(nextLevel);
-    }, [user, submitScore]);
+    }, [user, submitScore, initGame]);
 
     const handleGameOver = React.useCallback(() => {
         if (lives > 1) {
@@ -238,7 +238,7 @@ export default function DonkeyKongGame() {
             setGameState('GAME_OVER');
             submitScore({ score: scoreRef.current, level: levelRef.current, gameType: 'donkey-kong' });
         }
-    }, [lives, submitScore]);
+    }, [lives, submitScore, initGame]);
 
     // Game Loop
     useEffect(() => {

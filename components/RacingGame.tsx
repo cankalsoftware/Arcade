@@ -28,6 +28,14 @@ const OBSTACLE_TYPES = {
     barrier: '/assets/racing/barrier.svg'
 };
 
+// Difficulty Config
+const getLevelConfig = (lvl: number) => {
+    return {
+        baseSpeed: 5 + (lvl * 0.5),
+        obstacleChance: 0.02 + (Math.floor((lvl - 1) / 10) * 0.01),
+    };
+};
+
 interface Obstacle {
     x: number;
     y: number;
@@ -82,15 +90,9 @@ export default function RacingGame() {
         });
     }, []);
 
-    // Difficulty Config
-    const getLevelConfig = (lvl: number) => {
-        return {
-            baseSpeed: 5 + (lvl * 0.5),
-            obstacleChance: 0.02 + (Math.floor((lvl - 1) / 10) * 0.01),
-        };
-    };
 
-    const resetGame = (fullReset = false) => {
+
+    const resetGame = React.useCallback((fullReset = false) => {
         if (fullReset) {
             setLevel(1);
             levelRef.current = 1;
@@ -110,7 +112,7 @@ export default function RacingGame() {
 
         playerRef.current = { x: CANVAS_WIDTH / 2 - CAR_WIDTH / 2, y: CANVAS_HEIGHT - 100, lane: 1 };
         obstaclesRef.current = [];
-    };
+    }, []);
 
     // Input Handling
     useEffect(() => {
@@ -163,7 +165,8 @@ export default function RacingGame() {
         setLevel(nextLevel);
         levelRef.current = nextLevel;
         resetGame();
-    }, [user, submitScore]);
+        resetGame();
+    }, [user, submitScore, resetGame]);
 
     const handleGameOver = React.useCallback(() => {
         setGameState('GAME_OVER');
