@@ -18,17 +18,25 @@ export default function ClientLayout({
 }) {
   return (
     <ClerkProvider>
-      <header className="sticky top-0 z-50 flex justify-end items-center p-4 gap-4 h-16 backdrop-blur-md bg-black/50 border-b border-white/10">
+      <header className="sticky top-0 z-50 flex justify-end items-center p-4 gap-4 h-16 backdrop-blur-md bg-black/50 border-b border-white/10 relative">
+        <a
+          href="https://buymeacoffee.com/alicankal"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute left-1/2 -translate-x-1/2 text-yellow-400 font-bold hover:text-yellow-300 transition-colors text-2xl"
+        >
+          Buy Me a Coffee
+        </a>
         <SignedOut>
           <SignInButton mode="modal">
             <Button variant="ghost"
-              className='mr-4 text-white hover:text-blue-400 hover:bg-white/10'>
+              className='mr-4 text-white hover:text-blue-400 hover:bg-white/10 text-xl'>
               Sign In
             </Button>
           </SignInButton>
           <SignUpButton mode="modal">
             <Button variant="ghost"
-              className='mr-4 text-white hover:text-blue-400 hover:bg-white/10'>
+              className='mr-4 text-white hover:text-blue-400 hover:bg-white/10 text-xl'>
               Sign Up
             </Button>
           </SignUpButton>
