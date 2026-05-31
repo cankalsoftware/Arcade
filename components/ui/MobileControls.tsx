@@ -8,7 +8,7 @@ export type ControlAction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT' | 'A' | 'B';
 
 interface MobileControlsProps {
     onInput: (action: ControlAction, active: boolean) => void;
-    gameType?: 'TETRIS' | 'PACMAN' | 'RACING' | 'SPACE_INVADERS' | 'FROGGER' | 'DONKEY_KONG';
+    gameType?: 'TETRIS' | 'PACMAN' | 'RACING' | 'SPACE_INVADERS' | 'FROGGER' | 'DONKEY_KONG' | 'DIG_DUG';
     className?: string;
 }
 
@@ -64,14 +64,15 @@ export default function MobileControls({ onInput, gameType = 'TETRIS', className
             {/* Right Zone: Right Arrow & Action Button */}
             <div className="absolute right-4 bottom-4 flex flex-col items-center gap-4 pointer-events-auto">
                 {/* Action Button (A) */}
-                {(gameType === 'TETRIS' || gameType === 'DONKEY_KONG' || gameType === 'SPACE_INVADERS' || gameType === 'RACING') && (
+                {(gameType === 'TETRIS' || gameType === 'DONKEY_KONG' || gameType === 'SPACE_INVADERS' || gameType === 'RACING' || gameType === 'DIG_DUG') && (
                     <Button
                         variant="outline"
                         size="icon"
                         className={`h-16 w-16 rounded-2xl backdrop-blur-md border-white/20 shadow-xl ${gameType === 'TETRIS' ? 'bg-purple-500/60 active:bg-purple-500/80' :
                             gameType === 'DONKEY_KONG' ? 'bg-red-500/60 active:bg-red-500/80' :
                                 gameType === 'SPACE_INVADERS' ? 'bg-green-500/60 active:bg-green-500/80' :
-                                    'bg-blue-500/60 active:bg-blue-500/80'
+                                    gameType === 'DIG_DUG' ? 'bg-orange-600/60 active:bg-orange-600/80' :
+                                        'bg-blue-500/60 active:bg-blue-500/80'
                             }`}
                         {...bindEvents('A')}
                     >
@@ -79,6 +80,7 @@ export default function MobileControls({ onInput, gameType = 'TETRIS', className
                         {gameType === 'DONKEY_KONG' && <span className="font-bold text-sm text-white">JUMP</span>}
                         {gameType === 'SPACE_INVADERS' && <Zap className="w-8 h-8 text-white" />}
                         {gameType === 'RACING' && <span className="font-bold text-xs text-white">BOOST</span>}
+                        {gameType === 'DIG_DUG' && <span className="font-bold text-xs text-white">PUMP</span>}
                     </Button>
                 )}
 

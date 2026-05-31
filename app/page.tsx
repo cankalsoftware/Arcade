@@ -132,6 +132,23 @@ export default function ArcadeLanding() {
           </motion.div>
         </Link>
 
+        {/* Dig Dug Card */}
+        <Link href="/dig-dug" className="group">
+          <motion.div
+            whileHover={{ scale: 1.05, y: -10 }}
+            className="w-[320px] h-[450px] bg-[#111] border-2 border-amber-600 rounded-xl flex flex-col items-center justify-between p-8 relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(217,119,6,0.2)] group-hover:shadow-[0_0_30px_rgba(217,119,6,0.6),inset_0_0_20px_rgba(217,119,6,0.2)] group-hover:bg-[#1a1a1a]"
+          >
+            <div className="text-6xl mb-4 filter drop-shadow-[0_0_10px_rgba(217,119,6,0.8)]">👷</div>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-amber-600 font-mono mb-2 leading-tight">DIG DUG</h2>
+              <p className="text-gray-400 text-sm">Dig deeper, pop the monsters!</p>
+            </div>
+            <div className="px-8 py-3 border-2 border-amber-600 text-amber-600 font-mono text-sm uppercase tracking-wider transition-all group-hover:bg-amber-600 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(217,119,6,1)]">
+              Insert Coin
+            </div>
+          </motion.div>
+        </Link>
+
       </div>
     </div>
   );
