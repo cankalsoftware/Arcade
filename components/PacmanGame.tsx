@@ -300,104 +300,136 @@ export default function PacmanGame() {
             return mapRef.current[row][col] === 1;
         };
 
-        const moveEntity = (entity: Entity) => {
-            let moved = false;
-            // Try to change direction
-            if (entity.nextDir !== 'NONE' && entity.nextDir !== entity.dir) {
-                // Cornering Logic
-                const offX = Math.abs(entity.x - Math.round(entity.x));
-                const offY = Math.abs(entity.y - Math.round(entity.y));
-                const CORNER_TOLERANCE = 0.55; // Increased tolerance for wall-stops
+        const getNeighbor = (x: number, y: number, dir: Direction) => {
+            let nx = x;
+            let ny = y;
+            if (dir === 'UP') ny--;
+            if (dir === 'DOWN') ny++;
+            if (dir === 'LEFT') nx--;
+            if (dir === 'RIGHT') nx++;
+            return { x: nx, y: ny };
+        };
 
-                let canTurn = false;
+        const getOppositeDirection = (dir: Direction): Direction => {
+            if (dir === 'UP') return 'DOWN';
+            if (dir === 'DOWN') return 'UP';
+            if (dir === 'LEFT') return 'RIGHT';
+            if (dir === 'RIGHT') return 'LEFT';
+            return 'NONE';
+        };
 
-                if (entity.nextDir === 'UP' || entity.nextDir === 'DOWN') {
-                    if (offX < CORNER_TOLERANCE) canTurn = true;
-                }
-                if (entity.nextDir === 'LEFT' || entity.nextDir === 'RIGHT') {
-                    if (offY < CORNER_TOLERANCE) canTurn = true;
-                }
-
-                if (canTurn) {
-                    // Safe Snap Logic: Don't snap into a wall!
-                    let snapX = Math.round(entity.x);
-                    let snapY = Math.round(entity.y);
-
-                    // If we are turning vertically, we snap X. Check if that X is valid.
-                    if (entity.nextDir === 'UP' || entity.nextDir === 'DOWN') {
-                        if (checkCollision(snapX, entity.y)) {
-                            // The rounded X is a wall. Use the other side.
-                            snapX = entity.x < snapX ? Math.floor(entity.x) : Math.ceil(entity.x);
-                        }
-                    }
-                    // If we are turning horizontally, we snap Y.
-                    if (entity.nextDir === 'LEFT' || entity.nextDir === 'RIGHT') {
-                        if (checkCollision(entity.x, snapY)) {
-                            snapY = entity.y < snapY ? Math.floor(entity.y) : Math.ceil(entity.y);
-                        }
-                    }
-
-                    // Now check if the TARGET direction is free from this new snapped position
-                    let checkTestX = snapX;
-                    let checkTestY = snapY;
-                    if (entity.nextDir === 'UP') checkTestY -= 1; // Check full tile ahead
-                    if (entity.nextDir === 'DOWN') checkTestY += 1;
-                    if (entity.nextDir === 'LEFT') checkTestX -= 1;
-                    if (entity.nextDir === 'RIGHT') checkTestX += 1;
-
-                    if (!checkCollision(checkTestX, checkTestY)) {
+        const moveEntity = (entity: Entity, isGhost: boolean) => {
+            // If stationary, try to start moving
+            if (entity.dir === 'NONE') {
+                if (entity.nextDir !== 'NONE') {
+                    const neighbor = getNeighbor(entity.x, entity.y, entity.nextDir);
+                    if (!checkCollision(neighbor.x, neighbor.y)) {
                         entity.dir = entity.nextDir;
                         entity.nextDir = 'NONE';
-                        entity.x = snapX;
-                        entity.y = snapY;
                     }
                 }
-            } else if (entity.nextDir === entity.dir) {
-                entity.nextDir = 'NONE';
+                if (entity.dir === 'NONE') return false;
             }
 
-            // Move in current direction
-            let nextX = entity.x;
-            let nextY = entity.y;
-            const radius = 0.35; // Reduced radius for easier movement (0.45 -> 0.35)
-
-            if (entity.dir === 'UP') nextY -= entity.speed;
-            if (entity.dir === 'DOWN') nextY += entity.speed;
-            if (entity.dir === 'LEFT') nextX -= entity.speed;
-            if (entity.dir === 'RIGHT') nextX += entity.speed;
-
-            // Check collision points (leading edge)
-            let checkX = nextX;
-            let checkY = nextY;
-
-            if (entity.dir === 'UP') checkY -= radius;
-            if (entity.dir === 'DOWN') checkY += radius;
-            if (entity.dir === 'LEFT') checkX -= radius;
-            if (entity.dir === 'RIGHT') checkX += radius;
-
-            if (!checkCollision(checkX, checkY)) {
-                entity.x = nextX;
-                entity.y = nextY;
-                moved = true;
+            // Calculate next position
+            let currVal = (entity.dir === 'LEFT' || entity.dir === 'RIGHT') ? entity.x : entity.y;
+            let nextVal = currVal;
+            if (entity.dir === 'RIGHT' || entity.dir === 'DOWN') {
+                nextVal += entity.speed;
             } else {
-                // Stop if hit wall.
+                nextVal -= entity.speed;
             }
 
-            // Wrap around (Tunnel)
-            if (entity.x < 0) { entity.x = colsRef.current - 1; moved = true; }
-            if (entity.x >= colsRef.current) { entity.x = 0; moved = true; }
+            // Next integer grid boundary
+            let targetVal;
+            if (entity.dir === 'RIGHT' || entity.dir === 'DOWN') {
+                targetVal = Math.floor(currVal) + 1;
+            } else {
+                targetVal = Math.ceil(currVal) - 1;
+            }
 
-            return moved;
+            // Check if we reach or cross the grid boundary this frame
+            let reached = false;
+            if (entity.dir === 'RIGHT' || entity.dir === 'DOWN') {
+                reached = nextVal >= targetVal;
+            } else {
+                reached = nextVal <= targetVal;
+            }
+
+            if (reached) {
+                // Snap exactly to the center of the reached tile
+                let targetX = (entity.dir === 'LEFT' || entity.dir === 'RIGHT') ? targetVal : Math.round(entity.x);
+                let targetY = (entity.dir === 'UP' || entity.dir === 'DOWN') ? targetVal : Math.round(entity.y);
+
+                // Tunnel Wrap Around
+                if (targetX < 0) targetX = colsRef.current - 1;
+                if (targetX >= colsRef.current) targetX = 0;
+
+                entity.x = targetX;
+                entity.y = targetY;
+
+                // Make decisions exactly at the grid intersection
+                if (isGhost) {
+                    // Ghost AI: Choose next direction at center
+                    const dirs: Direction[] = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
+                    const validDirs = dirs.filter(d => {
+                        const n = getNeighbor(entity.x, entity.y, d);
+                        return !checkCollision(n.x, n.y);
+                    });
+                    const opposite = getOppositeDirection(entity.dir);
+                    const choices = validDirs.filter(d => d !== opposite);
+                    const finalChoices = choices.length > 0 ? choices : validDirs;
+
+                    if (finalChoices.length > 0) {
+                        entity.dir = finalChoices[Math.floor(Math.random() * finalChoices.length)];
+                    } else {
+                        entity.dir = 'NONE';
+                    }
+                } else {
+                    // Pacman decision at tile center
+                    let turned = false;
+                    if (entity.nextDir !== 'NONE') {
+                        const neighbor = getNeighbor(entity.x, entity.y, entity.nextDir);
+                        if (!checkCollision(neighbor.x, neighbor.y)) {
+                            entity.dir = entity.nextDir;
+                            entity.nextDir = 'NONE';
+                            turned = true;
+                        }
+                    }
+
+                    if (!turned) {
+                        // Stop if current direction is no longer held, or blocked
+                        const isHeld = heldDirectionsRef.current.includes(entity.dir);
+                        const neighbor = getNeighbor(entity.x, entity.y, entity.dir);
+                        const isBlocked = checkCollision(neighbor.x, neighbor.y);
+                        if (!isHeld || isBlocked) {
+                            entity.dir = 'NONE';
+                        }
+                    }
+                }
+
+                // Apply remaining sub-pixel movement in the new/current direction
+                if (entity.dir !== 'NONE') {
+                    const leftover = Math.abs(nextVal - targetVal);
+                    if (entity.dir === 'UP') entity.y -= leftover;
+                    else if (entity.dir === 'DOWN') entity.y += leftover;
+                    else if (entity.dir === 'LEFT') entity.x -= leftover;
+                    else if (entity.dir === 'RIGHT') entity.x += leftover;
+                }
+            } else {
+                // Update coordinates normally along the movement axis
+                if (entity.dir === 'UP') entity.y = nextVal;
+                else if (entity.dir === 'DOWN') entity.y = nextVal;
+                else if (entity.dir === 'LEFT') entity.x = nextVal;
+                else if (entity.dir === 'RIGHT') entity.x = nextVal;
+            }
+
+            return entity.dir !== 'NONE';
         };
 
         const update = () => {
-            // Stop if current direction is not held
-            if (pacmanRef.current.dir !== 'NONE' && !heldDirectionsRef.current.includes(pacmanRef.current.dir)) {
-                pacmanRef.current.dir = 'NONE';
-            }
-
             // Move Pacman
-            moveEntity(pacmanRef.current);
+            moveEntity(pacmanRef.current, false);
 
             // Eat Pellets
             const pRow = Math.round(pacmanRef.current.y);
@@ -417,58 +449,7 @@ export default function PacmanGame() {
 
             // Move Ghosts
             ghostsRef.current.forEach(ghost => {
-                // Simple AI: Random turns at intersections
-                const isCentered = Math.abs(ghost.x - Math.round(ghost.x)) < ghost.speed * 1.5 && Math.abs(ghost.y - Math.round(ghost.y)) < ghost.speed * 1.5;
-                if (isCentered) {
-                    const dirs: Direction[] = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
-                    const validDirs = dirs.filter(d => {
-                        let tx = Math.round(ghost.x);
-                        let ty = Math.round(ghost.y);
-                        if (d === 'UP') ty--;
-                        if (d === 'DOWN') ty++;
-                        if (d === 'LEFT') tx--;
-                        if (d === 'RIGHT') tx++;
-                        return !checkCollision(tx, ty);
-                    });
-
-                    // Don't reverse immediately if possible
-                    const filtered = validDirs.filter(d => {
-                        if (ghost.dir === 'UP' && d === 'DOWN') return false;
-                        if (ghost.dir === 'DOWN' && d === 'UP') return false;
-                        if (ghost.dir === 'LEFT' && d === 'RIGHT') return false;
-                        if (ghost.dir === 'RIGHT' && d === 'LEFT') return false;
-                        return true;
-                    });
-
-                    // If we are at an intersection (more than 1 choice, or 1 choice that isn't just forward), pick a new dir
-                    const choices = filtered.length > 0 ? filtered : validDirs;
-
-                    if (choices.length > 0) {
-                        const isJunction = validDirs.length > 2;
-                        const isCorner = validDirs.length === 2 && !((validDirs.includes('UP') && validDirs.includes('DOWN')) || (validDirs.includes('LEFT') && validDirs.includes('RIGHT')));
-
-                        if (isJunction || isCorner) {
-                            if (Math.random() < 0.2) { // 20% chance to change direction at intersection each frame it's centered
-                                ghost.nextDir = choices[Math.floor(Math.random() * choices.length)];
-                            }
-                        } else if (Math.random() < 0.02) {
-                            // Small chance to reverse or turn even on straight path? No, just keep moving.
-                        }
-
-                        if (ghost.dir === 'NONE') {
-                            ghost.nextDir = choices[Math.floor(Math.random() * choices.length)];
-                        }
-                    }
-                }
-
-                const moved = moveEntity(ghost);
-                if (!moved) {
-                    // If stuck, reverse direction
-                    if (ghost.dir === 'UP') ghost.nextDir = 'DOWN';
-                    else if (ghost.dir === 'DOWN') ghost.nextDir = 'UP';
-                    else if (ghost.dir === 'LEFT') ghost.nextDir = 'RIGHT';
-                    else if (ghost.dir === 'RIGHT') ghost.nextDir = 'LEFT';
-                }
+                moveEntity(ghost, true);
 
                 // Collision with Pacman
                 const dist = Math.hypot(ghost.x - pacmanRef.current.x, ghost.y - pacmanRef.current.y);
@@ -579,11 +560,14 @@ export default function PacmanGame() {
             </div>
 
             <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
-                <div className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] max-h-full max-w-full aspect-[19/21] w-auto h-auto flex">
+                <div 
+                    style={{ aspectRatio: colsRef.current / rowsRef.current } as React.CSSProperties}
+                    className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] max-h-full max-w-full w-auto h-auto flex"
+                >
                     <canvas
                         ref={canvasRef}
-                        width={380}
-                        height={420}
+                        width={colsRef.current * TILE_SIZE}
+                        height={rowsRef.current * TILE_SIZE}
                         className="block w-full h-full object-contain"
                     />
 

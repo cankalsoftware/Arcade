@@ -59,6 +59,18 @@ interface FloatingText {
     life: number;
 }
 
+interface Particle {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    color: string;
+    size: number;
+    life: number;
+    maxLife: number;
+    type: 'DIRT' | 'SPARKLE' | 'DUST';
+}
+
 interface DelayedItem {
     r: number;
     c: number;
@@ -94,6 +106,7 @@ export default function DigDugGame() {
     const pumpRef = useRef<Pump>({ active: false, x: 0, y: 0, dir: 'NONE', length: 0, targetId: null });
     const floatingTextsRef = useRef<FloatingText[]>([]);
     const delayedItemsRef = useRef<DelayedItem[]>([]);
+    const particlesRef = useRef<Particle[]>([]);
 
     const reqRef = useRef<number>(0);
     const scoreRef = useRef(0);
@@ -288,6 +301,24 @@ export default function DigDugGame() {
         });
         floatingTextsRef.current.push({ x: spawnX * TILE_SIZE, y: spawnY * TILE_SIZE, text: "WARNING!", color: "red", life: 60 });
     }, []);
+
+    const spawnParticles = (x: number, y: number, type: 'DIRT' | 'SPARKLE' | 'DUST', color: string, count: number) => {
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 2 + 1;
+            particlesRef.current.push({
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed + (type === 'DIRT' ? 1.5 : -0.5), // dirt falls down, sparkles float up
+                color,
+                size: Math.random() * 3 + 2,
+                life: Math.random() * 15 + 15,
+                maxLife: 30,
+                type
+            });
+        }
+    };
 
     // --- Game Logic ---
     const update = useCallback(() => {
@@ -523,6 +554,7 @@ export default function DigDugGame() {
                             // Points Immediately
                             scoreRef.current += 100; // Updated Value
                             floatingTextsRef.current.push({ x: c * TILE_SIZE, y: r * TILE_SIZE, text: "+100", color: "#FFD700", life: 60 });
+                            spawnParticles(c * TILE_SIZE + TILE_SIZE / 2, r * TILE_SIZE + TILE_SIZE / 2, 'SPARKLE', '#FFD700', 12);
 
                             // Delay disappearance for 1s (60 frames)
                             mapRef.current[r][c] = 21; // Revealed Gold ID
@@ -534,6 +566,7 @@ export default function DigDugGame() {
                             speedBoostTimerRef.current = 300; // 5 seconds @ 60fps
                             setDiamondTimer(5); // Show UI immediately
                             floatingTextsRef.current.push({ x: c * TILE_SIZE, y: r * TILE_SIZE, text: "SPEED UP! +250", color: "#00FFFF", life: 120 });
+                            spawnParticles(c * TILE_SIZE + TILE_SIZE / 2, r * TILE_SIZE + TILE_SIZE / 2, 'SPARKLE', '#00FFFF', 16);
 
                             // Delay disappearance for 1s
                             mapRef.current[r][c] = 22; // Revealed Diamond ID
@@ -559,6 +592,7 @@ export default function DigDugGame() {
                             mapRef.current[r][c] = 0;
                             scoreRef.current += 10;
                             setScore(scoreRef.current);
+                            spawnParticles(c * TILE_SIZE + TILE_SIZE / 2, r * TILE_SIZE + TILE_SIZE / 2, 'DIRT', '#8B4513', 6);
                         }
 
                         if (canMove) {
