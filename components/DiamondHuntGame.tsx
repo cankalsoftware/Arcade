@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { getDigDugLevel, TILE_SIZE, ROWS, COLS, EnemyConfig } from '@/lib/digdug-maps';
+import { getDiamondHuntLevel, TILE_SIZE, ROWS, COLS, EnemyConfig } from '@/lib/diamondhunt-maps';
 import Link from 'next/link';
 import Leaderboard from './Leaderboard';
 
@@ -78,7 +78,7 @@ interface DelayedItem {
     timer: number;
 }
 
-export default function DigDugGame() {
+export default function DiamondHuntGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { user } = useUser();
     const submitScore = useMutation(api.scores.submitScore);
@@ -128,15 +128,15 @@ export default function DigDugGame() {
 
     // --- Initialization ---
     const initLevel = useCallback((lvl: number) => {
-        const config = getDigDugLevel(lvl);
+        const config = getDiamondHuntLevel(lvl);
         // Deep copy map
         mapRef.current = config.map.map(row => [...row]);
         setEarthColor(config.color);
         setLevelName(config.levelName);
 
         playerRef.current = {
-            x: config.digDugStart.x,
-            y: config.digDugStart.y,
+            x: config.diamondHuntStart.x,
+            y: config.diamondHuntStart.y,
             dir: 'RIGHT',
             nextDir: 'NONE',
             speed: PLAYER_SPEED_BASE,
@@ -443,11 +443,11 @@ export default function DigDugGame() {
                 if (livesRef.current > 0) {
                     livesRef.current--;
                     setLives(livesRef.current);
-                    playerRef.current.x = getDigDugLevel(levelRef.current).digDugStart.x;
-                    playerRef.current.y = getDigDugLevel(levelRef.current).digDugStart.y;
+                    playerRef.current.x = getDiamondHuntLevel(levelRef.current).diamondHuntStart.x;
+                    playerRef.current.y = getDiamondHuntLevel(levelRef.current).diamondHuntStart.y;
                     // Reset flood? User said "start from biggining". Assuming level reset.
                     floodLevelRef.current = 0;
-                    mapRef.current = getDigDugLevel(levelRef.current).map.map(row => [...row]); // Full Map Reset
+                    mapRef.current = getDiamondHuntLevel(levelRef.current).map.map(row => [...row]); // Full Map Reset
                 } else {
                     setGameState('GAME_OVER');
                 }
@@ -544,8 +544,8 @@ export default function DigDugGame() {
                                 setLives(livesRef.current);
                                 // Reset pos slightly back?
                                 // Or full reset? Let's just hurt them for now/reset pos
-                                playerRef.current.x = getDigDugLevel(levelRef.current).digDugStart.x;
-                                playerRef.current.y = getDigDugLevel(levelRef.current).digDugStart.y;
+                                playerRef.current.x = getDiamondHuntLevel(levelRef.current).diamondHuntStart.x;
+                                playerRef.current.y = getDiamondHuntLevel(levelRef.current).diamondHuntStart.y;
                             } else {
                                 setGameState('GAME_OVER');
                                 submitScore({ score: scoreRef.current, level: levelRef.current, gameType: "dig_dug" });
@@ -684,8 +684,8 @@ export default function DigDugGame() {
                 if (livesRef.current > 0) {
                     livesRef.current--;
                     setLives(livesRef.current);
-                    playerRef.current.x = getDigDugLevel(levelRef.current).digDugStart.x;
-                    playerRef.current.y = getDigDugLevel(levelRef.current).digDugStart.y;
+                    playerRef.current.x = getDiamondHuntLevel(levelRef.current).diamondHuntStart.x;
+                    playerRef.current.y = getDiamondHuntLevel(levelRef.current).diamondHuntStart.y;
                 } else {
                     setGameState('GAME_OVER');
                     submitScore({ score: scoreRef.current, level: levelRef.current, gameType: "dig_dug" });
@@ -993,7 +993,7 @@ export default function DigDugGame() {
 
                         {gameState === 'START' && (
                             <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center p-8">
-                                <h2 className="text-4xl font-bold text-amber-500 mb-4 animate-pulse">DIG DUG</h2>
+                                <h2 className="text-4xl font-bold text-amber-500 mb-4 animate-pulse">DIAMOND HUNT</h2>
                                 <p className="text-gray-400 mb-8 max-w-md">
                                     Dig through the earth, pump enemies until they pop!
                                     <br /><br />
@@ -1045,7 +1045,7 @@ export default function DigDugGame() {
                 <Leaderboard gameType="dig_dug" />
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="DIG_DUG" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="DIAMOND_HUNT" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }

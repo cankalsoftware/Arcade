@@ -3,10 +3,10 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 // this is a middleware that checks if the user is authenticated
 const isProtectedRoute = createRouteMatcher([
   // '/space_invaders(.*)',
-  // '/tetris(.*)',
-  // '/pacman(.*)',
-  // '/donkey-kong(.*)',
-  // '/frogger(.*)'
+  // '/thebrickwall(.*)',
+  // '/marshmallowtrail(.*)',
+  // '/dodge-the-barrels(.*)',
+  // '/jumptheriver(.*)'
 ])
 
 export default clerkMiddleware(async (auth, req) => {

@@ -2,11 +2,11 @@ export interface MapConfig {
     rows: number;
     cols: number;
     map: number[][];
-    pacmanStart: { x: number, y: number };
+    marshmallowtrailStart: { x: number, y: number };
     ghostStart: { x: number, y: number };
 }
 
-// 1 = Wall, 0 = Pellet, 2 = Empty, 3 = Pacman Start, 4 = Ghost Start
+// 1 = Wall, 0 = Pellet, 2 = Empty, 3 = MarshmallowTrail Start, 4 = Ghost Start
 
 const MAP_1 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -122,12 +122,12 @@ export const getMapConfig = (level: number): MapConfig => {
     const cols = map[0].length;
 
     // Find start positions
-    let pacmanStart = { x: 9, y: 16 };
+    let marshmallowtrailStart = { x: 9, y: 16 };
     let ghostStart = { x: 9, y: 8 };
 
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-            if (map[r][c] === 3) pacmanStart = { x: c, y: r };
+            if (map[r][c] === 3) marshmallowtrailStart = { x: c, y: r };
             if (map[r][c] === 4) ghostStart = { x: c, y: r };
         }
     }
@@ -136,7 +136,7 @@ export const getMapConfig = (level: number): MapConfig => {
         rows,
         cols,
         map: JSON.parse(JSON.stringify(map)), // Return copy
-        pacmanStart,
+        marshmallowtrailStart,
         ghostStart
     };
 };

@@ -30,15 +30,15 @@ export default function ArcadeLanding() {
 
       <div className="flex flex-wrap justify-center gap-12 p-8 max-w-7xl w-full relative z-20">
 
-        {/* Space Invaders Card */}
-        <Link href="/space-invaders" className="group">
+        {/* Alien Attack Card */}
+        <Link href="/alien-attack" className="group">
           <motion.div
             whileHover={{ scale: 1.05, y: -10 }}
             className="w-[320px] h-[450px] bg-[#111] border-2 border-gray-500 rounded-xl flex flex-col items-center justify-between p-8 relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(128,128,128,0.2)] group-hover:shadow-[0_0_30px_rgba(128,128,128,0.6),inset_0_0_20px_rgba(128,128,128,0.2)] group-hover:bg-[#1a1a1a]"
           >
             <div className="text-6xl mb-4 filter drop-shadow-[0_0_10px_rgba(128,128,128,0.8)]">👾</div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-400 font-mono mb-2 leading-tight">SPACE<br />INVADERS</h2>
+              <h2 className="text-2xl font-bold text-gray-400 font-mono mb-2 leading-tight">ALIEN<br />ATTACK</h2>
               <p className="text-gray-400 text-sm">Defend Earth from the alien horde!</p>
             </div>
             <div className="px-8 py-3 border-2 border-gray-500 text-gray-500 font-mono text-sm uppercase tracking-wider transition-all group-hover:bg-gray-500 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(128,128,128,1)]">
@@ -47,15 +47,15 @@ export default function ArcadeLanding() {
           </motion.div>
         </Link>
 
-        {/* Tetris Card */}
-        <Link href="/tetris" className="group">
+        {/* The Brick Wall Card */}
+        <Link href="/the-brick-wall" className="group">
           <motion.div
             whileHover={{ scale: 1.05, y: -10 }}
             className="w-[320px] h-[450px] bg-[#111] border-2 border-yellow-400 rounded-xl flex flex-col items-center justify-between p-8 relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(255,255,0,0.2)] group-hover:shadow-[0_0_30px_rgba(255,255,0,0.6),inset_0_0_20px_rgba(255,255,0,0.2)] group-hover:bg-[#1a1a1a]"
           >
             <div className="text-6xl mb-4 filter drop-shadow-[0_0_10px_rgba(255,255,0,0.8)]">🧱</div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-yellow-400 font-mono mb-2 leading-tight">TETRIS</h2>
+              <h2 className="text-2xl font-bold text-yellow-400 font-mono mb-2 leading-tight">THE BRICK WALL</h2>
               <p className="text-gray-400 text-sm">Stack the blocks, clear the lines!</p>
             </div>
             <div className="px-8 py-3 border-2 border-yellow-400 text-yellow-400 font-mono text-sm uppercase tracking-wider transition-all group-hover:bg-yellow-400 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(255,255,0,1)]">
@@ -64,15 +64,15 @@ export default function ArcadeLanding() {
           </motion.div>
         </Link>
 
-        {/* Pac-Man Card */}
-        <Link href="/pacman" className="group">
+        {/* Marshmallow Trail Card */}
+        <Link href="/marshmallow-trail" className="group">
           <motion.div
             whileHover={{ scale: 1.05, y: -10 }}
             className="w-[320px] h-[450px] bg-[#111] border-2 border-pink-500 rounded-xl flex flex-col items-center justify-between p-8 relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(255,0,255,0.2)] group-hover:shadow-[0_0_30px_rgba(255,0,255,0.6),inset_0_0_20px_rgba(255,0,255,0.2)] group-hover:bg-[#1a1a1a]"
           >
             <div className="text-6xl mb-4 filter drop-shadow-[0_0_10px_rgba(255,0,255,0.8)]">👻</div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-pink-500 font-mono mb-2 leading-tight">PAC-MAN</h2>
+              <h2 className="text-2xl font-bold text-pink-500 font-mono mb-2 leading-tight">MARSHMALLOW TRAIL</h2>
               <p className="text-gray-400 text-sm">Waka waka waka!</p>
             </div>
             <div className="px-8 py-3 border-2 border-pink-500 text-pink-500 font-mono text-sm uppercase tracking-wider transition-all group-hover:bg-pink-500 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(255,0,255,1)]">
@@ -98,15 +98,15 @@ export default function ArcadeLanding() {
           </motion.div>
         </Link>
 
-        {/* Donkey Kong Card */}
-        <Link href="/donkey-kong" className="group">
+        {/* Dodge The Barrels Card */}
+        <Link href="/dodge-the-barrels" className="group">
           <motion.div
             whileHover={{ scale: 1.05, y: -10 }}
             className="w-[320px] h-[450px] bg-[#111] border-2 border-orange-500 rounded-xl flex flex-col items-center justify-between p-8 relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(255,165,0,0.2)] group-hover:shadow-[0_0_30px_rgba(255,165,0,0.6),inset_0_0_20px_rgba(255,165,0,0.2)] group-hover:bg-[#1a1a1a]"
           >
             <div className="text-6xl mb-4 filter drop-shadow-[0_0_10px_rgba(255,165,0,0.8)]">🦍</div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-orange-500 font-mono mb-2 leading-tight">DONKEY<br />KONG</h2>
+              <h2 className="text-2xl font-bold text-orange-500 font-mono mb-2 leading-tight">DODGE<br />THE BARRELS</h2>
               <p className="text-gray-400 text-sm">Save the Princess!</p>
             </div>
             <div className="px-8 py-3 border-2 border-orange-500 text-orange-500 font-mono text-sm uppercase tracking-wider transition-all group-hover:bg-orange-500 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(255,165,0,1)]">
@@ -115,15 +115,15 @@ export default function ArcadeLanding() {
           </motion.div>
         </Link>
 
-        {/* Frogger Card */}
-        <Link href="/frogger" className="group">
+        {/* Jump The River Card */}
+        <Link href="/jump-the-river" className="group">
           <motion.div
             whileHover={{ scale: 1.05, y: -10 }}
             className="w-[320px] h-[450px] bg-[#111] border-2 border-green-500 rounded-xl flex flex-col items-center justify-between p-8 relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(34,197,94,0.2)] group-hover:shadow-[0_0_30px_rgba(34,197,94,0.6),inset_0_0_20px_rgba(34,197,94,0.2)] group-hover:bg-[#1a1a1a]"
           >
             <div className="text-6xl mb-4 filter drop-shadow-[0_0_10px_rgba(34,197,94,0.8)]">🐸</div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-green-500 font-mono mb-2 leading-tight">FROGGER</h2>
+              <h2 className="text-2xl font-bold text-green-500 font-mono mb-2 leading-tight">JUMP THE RIVER</h2>
               <p className="text-gray-400 text-sm">Cross the Road!</p>
             </div>
             <div className="px-8 py-3 border-2 border-green-500 text-green-500 font-mono text-sm uppercase tracking-wider transition-all group-hover:bg-green-500 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(34,197,94,1)]">
@@ -132,15 +132,15 @@ export default function ArcadeLanding() {
           </motion.div>
         </Link>
 
-        {/* Dig Dug Card */}
-        <Link href="/dig-dug" className="group">
+        {/* Diamond Hunt Card */}
+        <Link href="/diamond-hunt" className="group">
           <motion.div
             whileHover={{ scale: 1.05, y: -10 }}
             className="w-[320px] h-[450px] bg-[#111] border-2 border-amber-600 rounded-xl flex flex-col items-center justify-between p-8 relative overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(217,119,6,0.2)] group-hover:shadow-[0_0_30px_rgba(217,119,6,0.6),inset_0_0_20px_rgba(217,119,6,0.2)] group-hover:bg-[#1a1a1a]"
           >
             <div className="text-6xl mb-4 filter drop-shadow-[0_0_10px_rgba(217,119,6,0.8)]">👷</div>
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-amber-600 font-mono mb-2 leading-tight">DIG DUG</h2>
+              <h2 className="text-2xl font-bold text-amber-600 font-mono mb-2 leading-tight">DIAMOND HUNT</h2>
               <p className="text-gray-400 text-sm">Dig deeper, pop the monsters!</p>
             </div>
             <div className="px-8 py-3 border-2 border-amber-600 text-amber-600 font-mono text-sm uppercase tracking-wider transition-all group-hover:bg-amber-600 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(217,119,6,1)]">

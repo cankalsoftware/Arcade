@@ -1,12 +1,12 @@
 'use client'
 
-import Game from "@/components/SpaceInvadersGame";
+import Game from "@/components/AlienAttackGame";
 import Leaderboard from "@/components/Leaderboard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
-export default function SpaceInvadersPage() {
+export default function AlienAttackPage() {
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col items-center py-8 px-4 gap-4">
       <div className="w-full max-w-7xl flex items-center justify-between">

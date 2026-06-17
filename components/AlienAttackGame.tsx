@@ -16,7 +16,7 @@ import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 
 const getCanvasWidth = (level: number) => 800 + Math.floor((level - 1) / 10) * 100;
 
-export default function SpaceInvadersGame() {
+export default function AlienAttackGame() {
     const { user } = useUser();
     const [showAuthOverlay, setShowAuthOverlay] = useState(false);
 
@@ -252,7 +252,7 @@ export default function SpaceInvadersGame() {
 
         if (level >= 50) {
             setGameState('VICTORY');
-            submitScore({ score, level, gameType: "space-invaders" });
+            submitScore({ score, level, gameType: "alien-attack" });
             clearSaveMutation();
         } else {
             setGameState('LEVEL_TRANSITION');
@@ -383,7 +383,7 @@ export default function SpaceInvadersGame() {
                         const newLives = prev - 1;
                         if (newLives <= 0) {
                             setGameState('GAME_OVER');
-                            submitScore({ score, level, gameType: "space-invaders" });
+                            submitScore({ score, level, gameType: "alien-attack" });
                             clearSaveMutation();
                         }
                         return newLives;
@@ -533,7 +533,7 @@ export default function SpaceInvadersGame() {
 
                     {gameState === 'START' && !showAuthOverlay && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
-                            <h1 className="text-6xl font-bold mb-8 text-green-500 font-mono tracking-widest">SPACE INVADERS</h1>
+                            <h1 className="text-6xl font-bold mb-8 text-green-500 font-mono tracking-widest">ALIEN ATTACK</h1>
                             <button
                                 onClick={() => startGame(false)}
                                 className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded text-2xl font-bold transition-all transform hover:scale-105 mb-4"
@@ -637,7 +637,7 @@ export default function SpaceInvadersGame() {
                 </div>
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="SPACE_INVADERS" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="ALIEN_ATTACK" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }

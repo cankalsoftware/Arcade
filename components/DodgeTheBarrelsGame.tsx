@@ -16,10 +16,10 @@ const CLIMB_SPEED = 2;
 
 // Assets
 const ASSETS = {
-    jumpman: '/assets/donkey-kong/jumpman.svg',
-    dk: '/assets/donkey-kong/dk.svg',
-    barrel: '/assets/donkey-kong/barrel.svg',
-    princess: '/assets/donkey-kong/princess.svg'
+    jumpman: '/assets/dodge-the-barrels/jumpman.svg',
+    dk: '/assets/dodge-the-barrels/dk.svg',
+    barrel: '/assets/dodge-the-barrels/barrel.svg',
+    princess: '/assets/dodge-the-barrels/princess.svg'
 };
 
 interface Entity {
@@ -51,7 +51,7 @@ interface Barrel {
     active: boolean;
 }
 
-export default function DonkeyKongGame() {
+export default function DodgeTheBarrelsGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { user } = useUser();
     const submitScore = useMutation(api.scores.submitScore);
@@ -221,7 +221,7 @@ export default function DonkeyKongGame() {
 
         if (nextLevel > 50) {
             setGameState('VICTORY');
-            submitScore({ score: scoreRef.current, level: 50, gameType: 'donkey-kong' });
+            submitScore({ score: scoreRef.current, level: 50, gameType: 'dodge-the-barrels' });
             return;
         }
 
@@ -236,7 +236,7 @@ export default function DonkeyKongGame() {
             initGame(levelRef.current); // Reset positions but keep level/score
         } else {
             setGameState('GAME_OVER');
-            submitScore({ score: scoreRef.current, level: levelRef.current, gameType: 'donkey-kong' });
+            submitScore({ score: scoreRef.current, level: levelRef.current, gameType: 'dodge-the-barrels' });
         }
     }, [lives, submitScore, initGame]);
 
@@ -488,7 +488,7 @@ export default function DonkeyKongGame() {
                     {/* Overlays */}
                     {gameState === 'START' && (
                         <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-red-600 mb-4 animate-pulse">DONKEY KONG</h2>
+                            <h2 className="text-4xl font-bold text-red-600 mb-4 animate-pulse">DODGE THE BARRELS</h2>
                             <p className="text-gray-400 mb-8">Save the Princess!</p>
                             <Button onClick={startGame} className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-8 py-4 text-xl">
                                 INSERT COIN
@@ -538,7 +538,7 @@ export default function DonkeyKongGame() {
                 ARROWS to Move/Climb • SPACE to Jump
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="DONKEY_KONG" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="DODGE_THE_BARRELS" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }

@@ -33,7 +33,7 @@ const SHAPES = [
 
 const getCols = (level: number) => 10 + Math.floor((level - 1) / 10) * 2;
 
-export default function TetrisGame() {
+export default function TheBrickWallGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { user } = useUser();
     const submitScore = useMutation(api.scores.submitScore);
@@ -140,7 +140,7 @@ export default function TetrisGame() {
             submitScore({
                 score: scoreRef.current,
                 level: levelRef.current,
-                gameType: "tetris"
+                gameType: "thebrickwall"
             });
         }
     }, [checkCollision, drawNext, submitScore]);
@@ -387,7 +387,7 @@ export default function TetrisGame() {
                         {/* Overlays */}
                         {gameState === 'START' && (
                             <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                                <h2 className="text-4xl font-bold text-yellow-400 mb-4 animate-pulse">TETRIS</h2>
+                                <h2 className="text-4xl font-bold text-yellow-400 mb-4 animate-pulse">THE_BRICK_WALL</h2>
                                 <p className="text-gray-400 mb-8">Arrows to Move & Rotate</p>
                                 <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
                                     START GAME
@@ -447,7 +447,7 @@ export default function TetrisGame() {
                 </div>
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="TETRIS" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="THE_BRICK_WALL" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }

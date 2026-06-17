@@ -8,11 +8,11 @@ export type ControlAction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT' | 'A' | 'B';
 
 interface MobileControlsProps {
     onInput: (action: ControlAction, active: boolean) => void;
-    gameType?: 'TETRIS' | 'PACMAN' | 'RACING' | 'SPACE_INVADERS' | 'FROGGER' | 'DONKEY_KONG' | 'DIG_DUG';
+    gameType?: 'THE_BRICK_WALL' | 'MARSHMALLOW_TRAIL' | 'RACING' | 'ALIEN_ATTACK' | 'JUMP_THE_RIVER' | 'DODGE_THE_BARRELS' | 'DIAMOND_HUNT';
     className?: string;
 }
 
-export default function MobileControls({ onInput, gameType = 'TETRIS', className = '' }: MobileControlsProps) {
+export default function MobileControls({ onInput, gameType = 'THE_BRICK_WALL', className = '' }: MobileControlsProps) {
 
     const handleInteraction = (action: ControlAction, active: boolean) => (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -64,23 +64,23 @@ export default function MobileControls({ onInput, gameType = 'TETRIS', className
             {/* Right Zone: Right Arrow & Action Button */}
             <div className="absolute right-4 bottom-4 flex flex-col items-center gap-4 pointer-events-auto">
                 {/* Action Button (A) */}
-                {(gameType === 'TETRIS' || gameType === 'DONKEY_KONG' || gameType === 'SPACE_INVADERS' || gameType === 'RACING' || gameType === 'DIG_DUG') && (
+                {(gameType === 'THE_BRICK_WALL' || gameType === 'DODGE_THE_BARRELS' || gameType === 'ALIEN_ATTACK' || gameType === 'RACING' || gameType === 'DIAMOND_HUNT') && (
                     <Button
                         variant="outline"
                         size="icon"
-                        className={`h-16 w-16 rounded-2xl backdrop-blur-md border-white/20 shadow-xl ${gameType === 'TETRIS' ? 'bg-purple-500/60 active:bg-purple-500/80' :
-                            gameType === 'DONKEY_KONG' ? 'bg-red-500/60 active:bg-red-500/80' :
-                                gameType === 'SPACE_INVADERS' ? 'bg-green-500/60 active:bg-green-500/80' :
-                                    gameType === 'DIG_DUG' ? 'bg-orange-600/60 active:bg-orange-600/80' :
+                        className={`h-16 w-16 rounded-2xl backdrop-blur-md border-white/20 shadow-xl ${gameType === 'THE_BRICK_WALL' ? 'bg-purple-500/60 active:bg-purple-500/80' :
+                            gameType === 'DODGE_THE_BARRELS' ? 'bg-red-500/60 active:bg-red-500/80' :
+                                gameType === 'ALIEN_ATTACK' ? 'bg-green-500/60 active:bg-green-500/80' :
+                                    gameType === 'DIAMOND_HUNT' ? 'bg-orange-600/60 active:bg-orange-600/80' :
                                         'bg-blue-500/60 active:bg-blue-500/80'
                             }`}
                         {...bindEvents('A')}
                     >
-                        {gameType === 'TETRIS' && <RotateCw className="w-8 h-8 text-white" />}
-                        {gameType === 'DONKEY_KONG' && <span className="font-bold text-sm text-white">JUMP</span>}
-                        {gameType === 'SPACE_INVADERS' && <Zap className="w-8 h-8 text-white" />}
+                        {gameType === 'THE_BRICK_WALL' && <RotateCw className="w-8 h-8 text-white" />}
+                        {gameType === 'DODGE_THE_BARRELS' && <span className="font-bold text-sm text-white">JUMP</span>}
+                        {gameType === 'ALIEN_ATTACK' && <Zap className="w-8 h-8 text-white" />}
                         {gameType === 'RACING' && <span className="font-bold text-xs text-white">BOOST</span>}
-                        {gameType === 'DIG_DUG' && <span className="font-bold text-xs text-white">PUMP</span>}
+                        {gameType === 'DIAMOND_HUNT' && <span className="font-bold text-xs text-white">PUMP</span>}
                     </Button>
                 )}
 

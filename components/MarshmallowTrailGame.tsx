@@ -9,10 +9,10 @@ import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
 // --- Constants & Types ---
-import { getMapConfig } from '@/lib/pacman-maps';
+import { getMapConfig } from '@/lib/marshmallowtrail-maps';
 
 const TILE_SIZE = 20;
-const PACMAN_SPEED = 0.1; // Slower speed for better control
+const MARSHMALLOW_TRAIL_SPEED = 0.1; // Slower speed for better control
 const BASE_GHOST_SPEED = 0.05;
 const GHOST_SPEED_INCREMENT = 0.002;
 
@@ -40,7 +40,7 @@ interface Entity {
     color: string;
 }
 
-export default function PacmanGame() {
+export default function MarshmallowTrailGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { user } = useUser();
     const submitScore = useMutation(api.scores.submitScore);
@@ -59,14 +59,14 @@ export default function PacmanGame() {
     const rowsRef = useRef(21);
     const colsRef = useRef(19);
 
-    const pacmanRef = useRef<Entity>({ x: 9, y: 16, dir: 'NONE', nextDir: 'NONE', speed: PACMAN_SPEED, color: 'yellow' });
+    const marshmallowtrailRef = useRef<Entity>({ x: 9, y: 16, dir: 'NONE', nextDir: 'NONE', speed: MARSHMALLOW_TRAIL_SPEED, color: 'yellow' });
     const ghostsRef = useRef<Entity[]>([]);
     const reqRef = useRef<number>(0);
     const scoreRef = useRef(0);
     const pelletsRef = useRef(0);
     const levelRef = useRef(1);
     const livesRef = useRef(3);
-    const pacmanStartRef = useRef({ x: 9, y: 16 });
+    const marshmallowtrailStartRef = useRef({ x: 9, y: 16 });
     const ghostStartRef = useRef({ x: 9, y: 8 });
 
     // Initialize Ghosts based on Level
@@ -105,15 +105,15 @@ export default function PacmanGame() {
         rowsRef.current = config.rows;
         colsRef.current = config.cols;
 
-        pacmanStartRef.current = config.pacmanStart;
+        marshmallowtrailStartRef.current = config.marshmallowtrailStart;
         ghostStartRef.current = config.ghostStart;
 
-        pacmanRef.current = {
-            x: config.pacmanStart.x,
-            y: config.pacmanStart.y,
+        marshmallowtrailRef.current = {
+            x: config.marshmallowtrailStart.x,
+            y: config.marshmallowtrailStart.y,
             dir: 'NONE',
             nextDir: 'NONE',
-            speed: PACMAN_SPEED,
+            speed: MARSHMALLOW_TRAIL_SPEED,
             color: 'yellow'
         };
         ghostsRef.current = initGhosts(newLevel);
@@ -154,7 +154,7 @@ export default function PacmanGame() {
                 // Remove if already present to move to top of stack
                 heldDirectionsRef.current = heldDirectionsRef.current.filter(d => d !== newDir);
                 heldDirectionsRef.current.push(newDir);
-                pacmanRef.current.nextDir = newDir;
+                marshmallowtrailRef.current.nextDir = newDir;
             }
         };
 
@@ -171,9 +171,9 @@ export default function PacmanGame() {
                 heldDirectionsRef.current = heldDirectionsRef.current.filter(d => d !== releasedDir);
 
                 if (heldDirectionsRef.current.length > 0) {
-                    pacmanRef.current.nextDir = heldDirectionsRef.current[heldDirectionsRef.current.length - 1];
+                    marshmallowtrailRef.current.nextDir = heldDirectionsRef.current[heldDirectionsRef.current.length - 1];
                 } else {
-                    pacmanRef.current.nextDir = 'NONE';
+                    marshmallowtrailRef.current.nextDir = 'NONE';
                 }
             }
         };
@@ -197,13 +197,13 @@ export default function PacmanGame() {
             if (active) {
                 heldDirectionsRef.current = heldDirectionsRef.current.filter(d => d !== dir);
                 heldDirectionsRef.current.push(dir);
-                pacmanRef.current.nextDir = dir;
+                marshmallowtrailRef.current.nextDir = dir;
             } else {
                 heldDirectionsRef.current = heldDirectionsRef.current.filter(d => d !== dir);
                 if (heldDirectionsRef.current.length > 0) {
-                    pacmanRef.current.nextDir = heldDirectionsRef.current[heldDirectionsRef.current.length - 1];
+                    marshmallowtrailRef.current.nextDir = heldDirectionsRef.current[heldDirectionsRef.current.length - 1];
                 } else {
-                    pacmanRef.current.nextDir = 'NONE';
+                    marshmallowtrailRef.current.nextDir = 'NONE';
                 }
             }
         }
@@ -224,7 +224,7 @@ export default function PacmanGame() {
                 submitScore({
                     score: scoreRef.current,
                     level: nextLevel,
-                    gameType: "pacman"
+                    gameType: "marshmallowtrail"
                 });
                 return;
             }
@@ -237,15 +237,15 @@ export default function PacmanGame() {
             rowsRef.current = config.rows;
             colsRef.current = config.cols;
 
-            pacmanStartRef.current = config.pacmanStart;
+            marshmallowtrailStartRef.current = config.marshmallowtrailStart;
             ghostStartRef.current = config.ghostStart;
 
-            pacmanRef.current = {
-                x: config.pacmanStart.x,
-                y: config.pacmanStart.y,
+            marshmallowtrailRef.current = {
+                x: config.marshmallowtrailStart.x,
+                y: config.marshmallowtrailStart.y,
                 dir: 'NONE',
                 nextDir: 'NONE',
-                speed: PACMAN_SPEED,
+                speed: MARSHMALLOW_TRAIL_SPEED,
                 color: 'yellow'
             };
             ghostsRef.current = initGhosts(nextLevel);
@@ -261,12 +261,12 @@ export default function PacmanGame() {
         if (livesRef.current > 1) {
             livesRef.current -= 1;
             setLives(livesRef.current);
-            pacmanRef.current = {
-                x: pacmanStartRef.current.x,
-                y: pacmanStartRef.current.y,
+            marshmallowtrailRef.current = {
+                x: marshmallowtrailStartRef.current.x,
+                y: marshmallowtrailStartRef.current.y,
                 dir: 'NONE',
                 nextDir: 'NONE',
-                speed: PACMAN_SPEED,
+                speed: MARSHMALLOW_TRAIL_SPEED,
                 color: 'yellow'
             };
             ghostsRef.current = initGhosts(levelRef.current);
@@ -276,7 +276,7 @@ export default function PacmanGame() {
             submitScore({
                 score: scoreRef.current,
                 level: levelRef.current,
-                gameType: "pacman"
+                gameType: "marshmallowtrail"
             });
         }
     }, [submitScore]);
@@ -386,7 +386,7 @@ export default function PacmanGame() {
                         entity.dir = 'NONE';
                     }
                 } else {
-                    // Pacman decision at tile center
+                    // MarshmallowTrail decision at tile center
                     let turned = false;
                     if (entity.nextDir !== 'NONE') {
                         const neighbor = getNeighbor(entity.x, entity.y, entity.nextDir);
@@ -428,12 +428,12 @@ export default function PacmanGame() {
         };
 
         const update = () => {
-            // Move Pacman
-            moveEntity(pacmanRef.current, false);
+            // Move MarshmallowTrail
+            moveEntity(marshmallowtrailRef.current, false);
 
             // Eat Pellets
-            const pRow = Math.round(pacmanRef.current.y);
-            const pCol = Math.round(pacmanRef.current.x);
+            const pRow = Math.round(marshmallowtrailRef.current.y);
+            const pCol = Math.round(marshmallowtrailRef.current.x);
             if (pRow >= 0 && pRow < rowsRef.current && pCol >= 0 && pCol < colsRef.current) {
                 if (mapRef.current[pRow][pCol] === 0) {
                     mapRef.current[pRow][pCol] = 2; // Empty
@@ -451,8 +451,8 @@ export default function PacmanGame() {
             ghostsRef.current.forEach(ghost => {
                 moveEntity(ghost, true);
 
-                // Collision with Pacman
-                const dist = Math.hypot(ghost.x - pacmanRef.current.x, ghost.y - pacmanRef.current.y);
+                // Collision with MarshmallowTrail
+                const dist = Math.hypot(ghost.x - marshmallowtrailRef.current.x, ghost.y - marshmallowtrailRef.current.y);
                 if (dist < 0.8) {
                     handleDeath();
                 }
@@ -488,18 +488,18 @@ export default function PacmanGame() {
                 }
             }
 
-            // Draw Pacman
-            const px = pacmanRef.current.x * TILE_SIZE + TILE_SIZE / 2;
-            const py = pacmanRef.current.y * TILE_SIZE + TILE_SIZE / 2;
+            // Draw MarshmallowTrail
+            const px = marshmallowtrailRef.current.x * TILE_SIZE + TILE_SIZE / 2;
+            const py = marshmallowtrailRef.current.y * TILE_SIZE + TILE_SIZE / 2;
             ctx.fillStyle = 'yellow';
             ctx.beginPath();
             // Simple mouth animation based on time
             const mouthOpen = Math.abs(Math.sin(Date.now() / 100)) * 0.2 + 0.02;
             let startAngle = 0;
-            if (pacmanRef.current.dir === 'RIGHT') startAngle = 0;
-            if (pacmanRef.current.dir === 'DOWN') startAngle = Math.PI / 2;
-            if (pacmanRef.current.dir === 'LEFT') startAngle = Math.PI;
-            if (pacmanRef.current.dir === 'UP') startAngle = -Math.PI / 2;
+            if (marshmallowtrailRef.current.dir === 'RIGHT') startAngle = 0;
+            if (marshmallowtrailRef.current.dir === 'DOWN') startAngle = Math.PI / 2;
+            if (marshmallowtrailRef.current.dir === 'LEFT') startAngle = Math.PI;
+            if (marshmallowtrailRef.current.dir === 'UP') startAngle = -Math.PI / 2;
 
             ctx.arc(px, py, TILE_SIZE / 2 - 2, startAngle + mouthOpen * Math.PI, startAngle + (2 - mouthOpen) * Math.PI);
             ctx.lineTo(px, py);
@@ -573,7 +573,7 @@ export default function PacmanGame() {
 
                     {gameState === 'START' && (
                         <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-yellow-500 mb-4 animate-pulse">PACMAN</h2>
+                            <h2 className="text-4xl font-bold text-yellow-500 mb-4 animate-pulse">MARSHMALLOW_TRAIL</h2>
                             <p className="text-gray-400 mb-8">Use Arrow Keys to Move</p>
                             <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
                                 INSERT COIN
@@ -621,7 +621,7 @@ export default function PacmanGame() {
                 Avoid the Ghosts! Clear all pellets to advance.
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="PACMAN" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="MARSHMALLOW_TRAIL" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }

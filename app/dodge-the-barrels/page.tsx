@@ -4,10 +4,10 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import DonkeyKongGame from '@/components/DonkeyKongGame';
+import DodgeTheBarrelsGame from '@/components/DodgeTheBarrelsGame';
 import Leaderboard from '@/components/Leaderboard';
 
-export default function DonkeyKongPage() {
+export default function DodgeTheBarrelsPage() {
     return (
         <div className="min-h-screen bg-black text-white p-8 pt-24">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -21,15 +21,15 @@ export default function DonkeyKongPage() {
                                 Back to Arcade
                             </Button>
                         </Link>
-                        <h1 className="text-3xl font-bold text-orange-500 font-mono tracking-wider">DONKEY KONG</h1>
+                        <h1 className="text-3xl font-bold text-orange-500 font-mono tracking-wider">DODGE THE BARRELS</h1>
                     </div>
 
-                    <DonkeyKongGame />
+                    <DodgeTheBarrelsGame />
                 </div>
 
                 {/* Leaderboard Column */}
                 <div className="lg:col-span-1">
-                    <Leaderboard gameType="donkey-kong" />
+                    <Leaderboard gameType="dodge-the-barrels" />
                 </div>
             </div>
         </div>

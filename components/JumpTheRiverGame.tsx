@@ -15,11 +15,11 @@ const CANVAS_HEIGHT = ROWS * GRID_SIZE; // 520
 
 // Assets
 const ASSETS = {
-    frog: '/assets/frogger/frog.svg',
-    car: '/assets/frogger/car.svg',
-    truck: '/assets/frogger/truck.svg',
-    log: '/assets/frogger/log.svg',
-    turtle: '/assets/frogger/turtle.svg'
+    frog: '/assets/jumptheriver/frog.svg',
+    car: '/assets/jumptheriver/car.svg',
+    truck: '/assets/jumptheriver/truck.svg',
+    log: '/assets/jumptheriver/log.svg',
+    turtle: '/assets/jumptheriver/turtle.svg'
 };
 
 interface Lane {
@@ -36,7 +36,7 @@ interface GameObject {
     type: string;
 }
 
-export default function FroggerGame() {
+export default function JumpTheRiverGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { user } = useUser();
     const submitScore = useMutation(api.scores.submitScore);
@@ -184,7 +184,7 @@ export default function FroggerGame() {
             timeRef.current = 60;
         } else {
             setGameState('GAME_OVER');
-            submitScore({ score: scoreRef.current, level, gameType: 'frogger' });
+            submitScore({ score: scoreRef.current, level, gameType: 'jumptheriver' });
         }
     }, [lives, level, submitScore]);
 
@@ -200,7 +200,7 @@ export default function FroggerGame() {
 
         if (nextLevel > 50) {
             setGameState('VICTORY');
-            submitScore({ score: scoreRef.current + 1000, level: 50, gameType: 'frogger' });
+            submitScore({ score: scoreRef.current + 1000, level: 50, gameType: 'jumptheriver' });
             return;
         }
 
@@ -384,7 +384,7 @@ export default function FroggerGame() {
                     {/* Overlays */}
                     {gameState === 'START' && (
                         <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-green-500 mb-4 animate-pulse">FROGGER</h2>
+                            <h2 className="text-4xl font-bold text-green-500 mb-4 animate-pulse">JUMP_THE_RIVER</h2>
                             <p className="text-gray-400 mb-8">Cross the Road & River!</p>
                             <Button onClick={startGame} className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-4 text-xl">
                                 INSERT COIN
@@ -434,7 +434,7 @@ export default function FroggerGame() {
                 ARROWS to Hop
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="FROGGER" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="JUMP_THE_RIVER" className="min-[1380px]:hidden absolute bottom-0" />
         </div>
     );
 }

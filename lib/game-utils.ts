@@ -38,20 +38,20 @@ export const BUNKER_WIDTH = 60;
 export const BUNKER_HEIGHT = 40;
 
 export const PLAYER_SHIPS = [
-    '/assets/space-invaders/player1.png',
-    '/assets/space-invaders/player2.png',
-    '/assets/space-invaders/player3.png',
+    '/assets/alien-attack/player1.png',
+    '/assets/alien-attack/player2.png',
+    '/assets/alien-attack/player3.png',
 ];
 
 export const ENEMY_SHIPS = [
-    '/assets/space-invaders/enemy1.png',
-    '/assets/space-invaders/enemy2.png',
-    '/assets/space-invaders/enemy3.png',
-    '/assets/space-invaders/enemy4.png',
-    '/assets/space-invaders/enemy5.png',
-    '/assets/space-invaders/enemy6.png',
-    '/assets/space-invaders/enemy7.png',
-    '/assets/space-invaders/enemy8.png',
-    '/assets/space-invaders/enemy9.png',
-    '/assets/space-invaders/enemy10.png',
+    '/assets/alien-attack/enemy1.png',
+    '/assets/alien-attack/enemy2.png',
+    '/assets/alien-attack/enemy3.png',
+    '/assets/alien-attack/enemy4.png',
+    '/assets/alien-attack/enemy5.png',
+    '/assets/alien-attack/enemy6.png',
+    '/assets/alien-attack/enemy7.png',
+    '/assets/alien-attack/enemy8.png',
+    '/assets/alien-attack/enemy9.png',
+    '/assets/alien-attack/enemy10.png',
 ];

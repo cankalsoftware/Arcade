@@ -4,10 +4,10 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import FroggerGame from '@/components/FroggerGame';
+import JumpTheRiverGame from '@/components/JumpTheRiverGame';
 import Leaderboard from '@/components/Leaderboard';
 
-export default function FroggerPage() {
+export default function JumpTheRiverPage() {
     return (
         <div className="min-h-screen bg-black text-white p-8 pt-24">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -21,15 +21,15 @@ export default function FroggerPage() {
                                 Back to Arcade
                             </Button>
                         </Link>
-                        <h1 className="text-3xl font-bold text-green-500 font-mono tracking-wider">FROGGER</h1>
+                        <h1 className="text-3xl font-bold text-green-500 font-mono tracking-wider">JUMP THE RIVER</h1>
                     </div>
 
-                    <FroggerGame />
+                    <JumpTheRiverGame />
                 </div>
 
                 {/* Leaderboard Column */}
                 <div className="lg:col-span-1">
-                    <Leaderboard gameType="frogger" />
+                    <Leaderboard gameType="jumptheriver" />
                 </div>
             </div>
         </div>

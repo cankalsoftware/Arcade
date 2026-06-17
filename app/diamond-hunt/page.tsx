@@ -1,10 +1,10 @@
-import DigDugGame from "@/components/DigDugGame";
+import DiamondHuntGame from "@/components/DiamondHuntGame";
 
 export const metadata = {
-    title: 'Dig Dug | Arcade Central',
+    title: 'Diamond Hunt | Arcade Central',
     description: 'Play the classic Dig Dug arcade game!',
 };
 
-export default function DigDugPage() {
-    return <DigDugGame />;
+export default function DiamondHuntPage() {
+    return <DiamondHuntGame />;
 }

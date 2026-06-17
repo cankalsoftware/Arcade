@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import PacmanGame from '@/components/PacmanGame';
+import MarshmallowTrailGame from '@/components/MarshmallowTrailGame';
 
 import Leaderboard from "@/components/Leaderboard";
 
-export default function PacmanPage() {
+export default function MarshmallowTrailPage() {
     return (
         <div className="min-h-screen bg-gray-950 flex flex-col items-center py-8 px-4 gap-4 text-white relative">
             <div className="w-full max-w-7xl flex items-center justify-between">
@@ -22,11 +22,11 @@ export default function PacmanPage() {
 
             <main className="flex flex-col xl:flex-row gap-12 items-start justify-center w-full max-w-7xl">
                 <div className="flex-1 flex justify-center w-full">
-                    <PacmanGame />
+                    <MarshmallowTrailGame />
                 </div>
 
                 <div className="w-full xl:w-auto flex justify-center">
-                    <Leaderboard gameType="pacman" />
+                    <Leaderboard gameType="marshmallowtrail" />
                 </div>
             </main>
         </div>

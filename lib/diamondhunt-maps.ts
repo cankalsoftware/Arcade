@@ -32,7 +32,7 @@ export interface LevelConfig {
     map: number[][];
     enemies: EnemyConfig[];
     rocks: RockConfig[];
-    digDugStart: { x: number; y: number };
+    diamondHuntStart: { x: number; y: number };
     color: string; // Earth color
     levelName: string;
 }
@@ -50,7 +50,7 @@ const EARTH_COLORS = [
     '#2F4F4F', // DarkSlateGray
 ];
 
-export function getDigDugLevel(level: number): LevelConfig {
+export function getDiamondHuntLevel(level: number): LevelConfig {
     // 0. Setup Grid
     const map: number[][] = Array.from({ length: ROWS }, () => Array(COLS).fill(1));
     for (let c = 0; c < COLS; c++) map[0][c] = 0; // Top row empty
@@ -134,7 +134,7 @@ export function getDigDugLevel(level: number): LevelConfig {
         numFygars = 1 + level;
     }
 
-    const digDugStart = { x: 7, y: 5 };
+    const diamondHuntStart = { x: 7, y: 5 };
 
     // Helper to find open tunnel spot
     const findOpenSpot = (): { x: number, y: number } | null => {
@@ -144,7 +144,7 @@ export function getDigDugLevel(level: number): LevelConfig {
             const c = 1 + Math.floor(Math.random() * (COLS - 2));
 
             // Distance Check from Player
-            const distPlayer = Math.hypot(c - digDugStart.x, r - digDugStart.y);
+            const distPlayer = Math.hypot(c - diamondHuntStart.x, r - diamondHuntStart.y);
 
             // Distance Check from Other Enemies (Spread them out)
             const isCrowded = enemies.some(e => Math.hypot(e.x - c, e.y - r) < 4); // Min 4 tiles apart
@@ -191,7 +191,7 @@ export function getDigDugLevel(level: number): LevelConfig {
         map,
         enemies,
         rocks,
-        digDugStart: { x: 7, y: 5 },
+        diamondHuntStart: { x: 7, y: 5 },
         color: EARTH_COLORS[(level - 1) % EARTH_COLORS.length],
         levelName: level % 10 === 0 ? `MILESTONE ${level}` : `LEVEL ${level}`
     };
