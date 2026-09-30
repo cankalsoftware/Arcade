@@ -1,0 +1,26 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="playerYellow" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFF59D"/>
+      <stop offset="40%" stop-color="#FEE500"/>
+      <stop offset="85%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </radialGradient>
+    <radialGradient id="playerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FDE047" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#FDE047" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="24" cy="24" r="22" fill="url(#playerGlow)"/>
+
+  <!-- Chomping Character Body -->
+  <path d="M24 24 L42 12 A 20 20 0 1 0 42 36 Z" fill="url(#playerYellow)"/>
+
+  <!-- Specular Light Sheen -->
+  <path d="M12 14 A 16 16 0 0 1 28 8" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
+
+  <!-- Trailing Delicious Marshmallows / Dots -->
+  <circle cx="44" cy="24" r="3" fill="#FDE047"/>
+  <circle cx="44" cy="24" r="2" fill="#FFFFFF"/>
+</svg>

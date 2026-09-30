@@ -1,0 +1,63 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="drakeBody" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="50%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#064E3B"/>
+    </radialGradient>
+    <linearGradient id="drakeCrest" x1="10" y1="0" x2="10" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <radialGradient id="fireEye" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="60%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#7F1D1D"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Golden Spines / Crest -->
+  <polygon points="12,10 7,4 17,9" fill="url(#drakeCrest)"/>
+  <polygon points="20,7 16,0 25,6" fill="url(#drakeCrest)"/>
+  <polygon points="28,7 26,1 33,8" fill="url(#drakeCrest)"/>
+  <polygon points="35,10 36,4 40,12" fill="url(#drakeCrest)"/>
+
+  <!-- Cave Drake Wings -->
+  <path d="M12 18 C6 14 4 24 10 26 Z" fill="#FCD34D" opacity="0.9"/>
+  <path d="M36 18 C42 14 44 24 38 26 Z" fill="#FCD34D" opacity="0.9"/>
+
+  <!-- Feet Claws -->
+  <ellipse cx="16" cy="41" rx="5" ry="3.5" fill="#047857"/>
+  <ellipse cx="32" cy="41" rx="5" ry="3.5" fill="#047857"/>
+
+  <!-- Main Body -->
+  <ellipse cx="24" cy="26" rx="16" ry="14" fill="url(#drakeBody)"/>
+  
+  <!-- Pale Gold Underbelly -->
+  <ellipse cx="24" cy="29" rx="10" ry="9" fill="#FEF3C7"/>
+  <path d="M16 26 H32 M15 30 H33 M18 34 H30" stroke="#D97706" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Dragon Snout -->
+  <ellipse cx="24" cy="21" rx="7" ry="5" fill="#10B981"/>
+  <circle cx="21" cy="20" r="1.2" fill="#064E3B"/>
+  <circle cx="27" cy="20" r="1.2" fill="#064E3B"/>
+
+  <!-- Glowing Fiery Dragon Eyes -->
+  <circle cx="16" cy="16" r="4.5" fill="#FFFFFF"/>
+  <circle cx="16" cy="16" r="3.2" fill="url(#fireEye)"/>
+  <circle cx="16" cy="16" r="1.5" fill="#1C1917"/>
+  <circle cx="15.5" cy="15" r="0.8" fill="#FFFFFF"/>
+
+  <circle cx="32" cy="16" r="4.5" fill="#FFFFFF"/>
+  <circle cx="32" cy="16" r="3.2" fill="url(#fireEye)"/>
+  <circle cx="32" cy="16" r="1.5" fill="#1C1917"/>
+  <circle cx="31.5" cy="15" r="0.8" fill="#FFFFFF"/>
+
+  <!-- Horns -->
+  <path d="M15 11 L10 7 L17 9" fill="#FBBF24"/>
+  <path d="M33 11 L38 7 L31 9" fill="#FBBF24"/>
+
+  <!-- Fangs -->
+  <polygon points="21,24 23,24 22,27" fill="#FFFFFF"/>
+  <polygon points="25,24 27,24 26,27" fill="#FFFFFF"/>
+</svg>

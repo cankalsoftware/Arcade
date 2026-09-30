@@ -1,12 +1,30 @@
-<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-  <!-- Base -->
-  <rect x="2" y="25" width="36" height="10" fill="#cc0000" stroke="#fff" stroke-width="2"/>
-  <!-- Stripes -->
-  <path d="M5,25 L10,35 M15,25 L20,35 M25,25 L30,35" stroke="#fff" stroke-width="2"/>
-  <!-- Top Bar -->
-  <rect x="5" y="15" width="30" height="10" fill="#fff"/>
-  <rect x="5" y="15" width="30" height="10" fill="repeating-linear-gradient(45deg, #cc0000, #cc0000 5px, #fff 5px, #fff 10px)"/>
-  <!-- Lights -->
-  <circle cx="5" cy="10" r="3" fill="#ffcc00"/>
-  <circle cx="35" cy="10" r="3" fill="#ffcc00"/>
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="hazardStripe" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="5" height="10" fill="#EF4444"/>
+      <rect x="5" width="5" height="10" fill="#FFFFFF"/>
+    </pattern>
+    <radialGradient id="hazardLight" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="60%" stop-color="#EAB308"/>
+      <stop offset="100%" stop-color="#CA8A04"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Heavy Concrete Base Stands -->
+  <polygon points="4,24 8,36 14,36 12,24" fill="#334155"/>
+  <polygon points="28,24 26,36 32,36 36,24" fill="#334155"/>
+  <rect x="2" y="34" width="36" height="4" rx="2" fill="#0F172A"/>
+
+  <!-- Top Flashing Warning Lights -->
+  <circle cx="6" cy="8" r="4" fill="url(#hazardLight)"/>
+  <circle cx="6" cy="8" r="2" fill="#FFFFFF"/>
+  <circle cx="34" cy="8" r="4" fill="url(#hazardLight)"/>
+  <circle cx="34" cy="8" r="2" fill="#FFFFFF"/>
+
+  <!-- Main Hazard Barrier Bar (Top) -->
+  <rect x="2" y="12" width="36" height="10" rx="2" fill="url(#hazardStripe)" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- Lower Hazard Barrier Bar -->
+  <rect x="4" y="24" width="32" height="8" rx="2" fill="url(#hazardStripe)" stroke="#1E293B" stroke-width="1.5"/>
 </svg>

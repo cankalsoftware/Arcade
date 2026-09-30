@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const outputDir = path.join(__dirname, '../public/assets');
+const outputDir = path.join(__dirname, '../public/assets/alien-attack');
 
 function generateSVG(type, seed, color) {
     const width = 12;

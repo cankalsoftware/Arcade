@@ -1,4 +1,4 @@
-// Enhanced Dig Dug Map Configuration
+// Enhanced Diamond Hunt Map Configuration
 
 export const TILE_SIZE = 48;
 export const ROWS = 15;
@@ -18,7 +18,7 @@ export type TileType =
 export interface EnemyConfig {
     x: number;
     y: number;
-    type: 'POOKA' | 'FYGAR';
+    type: 'BURROWER' | 'DRAKE';
 }
 
 export interface RockConfig {
@@ -122,16 +122,16 @@ export function getDiamondHuntLevel(level: number): LevelConfig {
     // 3. Enemies
     const enemies: EnemyConfig[] = [];
 
-    let numPookas = 0;
-    let numFygars = 0;
+    let numBurrowers = 0;
+    let numDrakes = 0;
 
     if (level === 1) {
-        numPookas = 1;
-        numFygars = 1;
+        numBurrowers = 1;
+        numDrakes = 1;
     } else {
-        // Scale enemies aggressively: "multiply itself every level"
-        numPookas = 3 + (level * 2);
-        numFygars = 1 + level;
+        // Scale enemies aggressively
+        numBurrowers = 3 + (level * 2);
+        numDrakes = 1 + level;
     }
 
     const diamondHuntStart = { x: 7, y: 5 };
@@ -155,13 +155,13 @@ export function getDiamondHuntLevel(level: number): LevelConfig {
         return null;
     };
 
-    for (let i = 0; i < numPookas; i++) {
+    for (let i = 0; i < numBurrowers; i++) {
         const spot = findOpenSpot();
-        if (spot) enemies.push({ ...spot, type: 'POOKA' });
+        if (spot) enemies.push({ ...spot, type: 'BURROWER' });
     }
-    for (let i = 0; i < numFygars; i++) {
+    for (let i = 0; i < numDrakes; i++) {
         const spot = findOpenSpot();
-        if (spot) enemies.push({ ...spot, type: 'FYGAR' });
+        if (spot) enemies.push({ ...spot, type: 'DRAKE' });
     }
 
     // 4. Rocks (Falling)

@@ -186,20 +186,21 @@ export default function RacingGame() {
 
 
 
-            // Speed Boost
+            // Speed Boost (2x Turbo Speed)
             let currentSpeed = config.baseSpeed;
             if (keysRef.current['Space']) {
-                currentSpeed *= 1.5;
+                currentSpeed *= 2.0; // 2x Turbo Speed Boost
             }
             speedRef.current = currentSpeed;
             // setSpeed(Math.round(currentSpeed));
 
             // Movement
+            const steerSpeed = keysRef.current['Space'] ? 8 : 5;
             if (keysRef.current['ArrowLeft'] && playerRef.current.x > 0) {
-                playerRef.current.x -= 5;
+                playerRef.current.x -= steerSpeed;
             }
             if (keysRef.current['ArrowRight'] && playerRef.current.x < CANVAS_WIDTH - CAR_WIDTH) {
-                playerRef.current.x += 5;
+                playerRef.current.x += steerSpeed;
             }
 
             // Score
@@ -295,9 +296,39 @@ export default function RacingGame() {
                     if (obs.type === 'rock') ctx.fillStyle = '#888';
                     if (obs.type === 'barrier') ctx.fillStyle = '#d00';
                     if (obs.type === 'oil') ctx.fillStyle = '#000';
-                    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
                 }
             });
+
+            // 2X Turbo Boost On-Screen Visual & HUD
+            if (keysRef.current['Space']) {
+                // High-speed motion wind lines
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 6; i++) {
+                    const lineX = (i + 1) * (CANVAS_WIDTH / 7);
+                    const lineY = (Date.now() * 2 + i * 100) % CANVAS_HEIGHT;
+                    ctx.beginPath();
+                    ctx.moveTo(lineX, lineY);
+                    ctx.lineTo(lineX, lineY + 40);
+                    ctx.stroke();
+                }
+
+                // 2X Turbo Indicator Tag
+                ctx.save();
+                ctx.fillStyle = 'rgba(220, 38, 38, 0.85)';
+                ctx.beginPath();
+                ctx.roundRect(CANVAS_WIDTH / 2 - 90, 15, 180, 26, 6);
+                ctx.fill();
+                ctx.strokeStyle = '#FEF08A';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = "bold 12px 'Courier New', monospace";
+                ctx.textAlign = 'center';
+                ctx.fillText('⚡ 2X TURBO BOOST', CANVAS_WIDTH / 2, 32);
+                ctx.restore();
+            }
         };
 
         const loop = (timestamp: number) => {
@@ -318,18 +349,24 @@ export default function RacingGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:pb-0">
-            <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-xs min-[1380px]:text-xl font-mono text-red-500 px-4 min-[1380px]:px-0">
-                <div>SCORE: {score}</div>
-                <div>LEVEL: {level}</div>
+        <div className="w-full h-full max-h-full flex flex-col items-center justify-between min-h-0 overflow-hidden relative">
+            <div className="flex-none py-1.5 px-4 flex justify-between items-center w-full max-w-[400px] text-xs sm:text-sm font-mono bg-gray-900/80 rounded-lg border border-gray-800 shadow-md">
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">SCORE:</span>
+                    <span className="text-white font-bold">{score}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LEVEL:</span>
+                    <span className="text-red-400 font-bold">{level}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">DODGED:</span>
+                    <span className="text-yellow-400 font-bold">{dodged}/10</span>
+                </div>
             </div>
-            <div className="flex-none flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-[10px] min-[1380px]:text-sm font-mono text-yellow-400 px-4 min-[1380px]:px-0">
-                <div>DODGED: {dodged}/10</div>
 
-            </div>
-
-            <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
-                <div className="relative border-4 border-gray-700 rounded-lg bg-black shadow-[0_0_20px_rgba(255,0,0,0.3)] max-h-full max-w-full aspect-[2/3] w-auto h-auto flex">
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1 sm:p-2 relative">
+                <div className="relative border-2 sm:border-4 border-gray-700 rounded-lg bg-black shadow-[0_0_20px_rgba(255,0,0,0.3)] max-h-full max-w-full aspect-[2/3] w-auto h-auto flex overflow-hidden">
                     <canvas
                         ref={canvasRef}
                         width={CANVAS_WIDTH}
@@ -338,22 +375,25 @@ export default function RacingGame() {
                     />
 
                     {gameState === 'START' && (
-                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-red-600 mb-4 animate-pulse">RACING</h2>
-                            <p className="text-gray-400 mb-4">Select Your Car:</p>
-                            <div className="flex gap-4 mb-8">
+                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-3xl sm:text-4xl font-bold text-red-600 mb-2 animate-pulse font-mono">RETRO RACING</h2>
+                            <p className="text-gray-400 mb-4 text-xs sm:text-sm">Select Your Car:</p>
+                            <div className="flex gap-3 sm:gap-4 mb-6">
                                 {CAR_TYPES.map((car, idx) => (
                                     <div
                                         key={idx}
                                         onClick={() => setSelectedCar(idx)}
-                                        className={`p-2 border-2 cursor-pointer transition-all ${selectedCar === idx ? 'border-white scale-110' : 'border-transparent opacity-50'}`}
+                                        className={`p-2 border-2 cursor-pointer transition-all rounded-lg ${selectedCar === idx ? 'border-red-500 bg-red-500/20 scale-110' : 'border-gray-700 opacity-60'}`}
                                     >
-                                        <NextImage src={car.src} alt={car.name} width={40} height={64} className="w-10 h-16 object-contain" />
-                                        <div className="text-xs mt-1 text-white">{car.name}</div>
+                                        <NextImage src={car.src} alt={car.name} width={40} height={64} className="w-8 h-12 sm:w-10 sm:h-16 object-contain" />
+                                        <div className="text-[10px] sm:text-xs mt-1 text-white font-mono">{car.name}</div>
                                     </div>
                                 ))}
                             </div>
-                            <Button onClick={startGame} className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 text-xl">
+                            <p className="text-yellow-400 mb-6 text-xs sm:text-sm font-mono flex items-center gap-1.5 bg-yellow-950/60 px-3 py-1.5 rounded-full border border-yellow-500/30">
+                                <span>⚡</span> <span>Hold <b>SPACEBAR</b> or <b>A/B Button</b> for 2X Turbo Speed!</span>
+                            </p>
+                            <Button onClick={startGame} className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl rounded-lg shadow-lg shadow-red-600/40">
                                 START ENGINE
                             </Button>
                         </div>
@@ -361,10 +401,10 @@ export default function RacingGame() {
 
                     {/* Game Over */}
                     {gameState === 'GAME_OVER' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-red-500 mb-4">CRASHED!</h2>
-                            <p className="text-white text-xl mb-8">Final Score: {score}</p>
-                            <Button onClick={startGame} className="bg-white hover:bg-gray-200 text-black font-bold px-8 py-4">
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold text-red-500 mb-4 font-mono">CRASHED!</h2>
+                            <p className="text-white text-xl mb-6 font-mono">Final Score: <span className="text-red-400 font-bold">{score}</span></p>
+                            <Button onClick={startGame} className="bg-white hover:bg-gray-200 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 font-mono">
                                 TRY AGAIN
                             </Button>
                         </div>
@@ -372,10 +412,10 @@ export default function RacingGame() {
 
                     {/* Victory */}
                     {gameState === 'VICTORY' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-yellow-400 mb-4">CHAMPION!</h2>
-                            <p className="text-white text-xl mb-8">You beat all 50 levels!</p>
-                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4">
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold text-yellow-400 mb-4 font-mono">CHAMPION!</h2>
+                            <p className="text-white text-xl mb-6 font-mono">You beat all 50 levels!</p>
+                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 font-mono">
                                 RACE AGAIN
                             </Button>
                         </div>
@@ -383,9 +423,9 @@ export default function RacingGame() {
 
                     {/* Auth Required */}
                     {gameState === 'AUTH_REQUIRED' && (
-                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8 z-20">
                             <h2 className="text-3xl font-bold text-red-500 mb-4">LEVEL 3 LOCKED</h2>
-                            <p className="text-gray-300 mb-8">Sign in to continue your career!</p>
+                            <p className="text-gray-300 mb-6">Sign in to continue your career!</p>
                             <SignInButton mode="modal">
                                 <Button className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 text-xl">
                                     SIGN IN
@@ -397,11 +437,13 @@ export default function RacingGame() {
                 </div>
             </div>
 
-            <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-500 text-[10px] min-[1380px]:text-sm font-mono mt-4 hidden min-[400px]:block">
-                ARROWS to Steer • SPACE to Boost
+            <div className="flex-none py-1 px-3 text-gray-300 text-[10px] sm:text-xs font-mono hidden min-[400px]:flex items-center gap-2 bg-gray-900/60 rounded-md border border-gray-800">
+                <span>ARROWS to Steer</span>
+                <span className="text-gray-600">•</span>
+                <span className="text-yellow-400 font-bold">Hold SPACE for 2X Turbo Speed ⚡</span>
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="RACING" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="RACING" className="lg:hidden" />
         </div>
     );
 }

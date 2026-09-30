@@ -1,22 +1,57 @@
-<svg width="40" height="70" viewBox="0 0 40 70" xmlns="http://www.w3.org/2000/svg">
-  <!-- Body -->
-  <rect x="5" y="5" width="30" height="60" rx="2" fill="#228b22" stroke="#006400" stroke-width="2"/>
-  <!-- Turret -->
-  <circle cx="20" cy="35" r="10" fill="#006400"/>
-  <!-- Gun -->
-  <rect x="18" y="10" width="4" height="25" fill="#004d00"/>
-  <!-- Treads -->
-  <rect x="0" y="5" width="6" height="60" fill="#333"/>
-  <rect x="34" y="5" width="6" height="60" fill="#333"/>
-  <!-- Tread Details -->
-  <line x1="0" y1="15" x2="6" y2="15" stroke="#555" stroke-width="1"/>
-  <line x1="0" y1="25" x2="6" y2="25" stroke="#555" stroke-width="1"/>
-  <line x1="0" y1="35" x2="6" y2="35" stroke="#555" stroke-width="1"/>
-  <line x1="0" y1="45" x2="6" y2="45" stroke="#555" stroke-width="1"/>
-  <line x1="0" y1="55" x2="6" y2="55" stroke="#555" stroke-width="1"/>
-  <line x1="34" y1="15" x2="40" y2="15" stroke="#555" stroke-width="1"/>
-  <line x1="34" y1="25" x2="40" y2="25" stroke="#555" stroke-width="1"/>
-  <line x1="34" y1="35" x2="40" y2="35" stroke="#555" stroke-width="1"/>
-  <line x1="34" y1="45" x2="40" y2="45" stroke="#555" stroke-width="1"/>
-  <line x1="34" y1="55" x2="40" y2="55" stroke="#555" stroke-width="1"/>
+<svg width="40" height="70" viewBox="0 0 40 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="raceGreen" x1="0" y1="0" x2="40" y2="70" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4ADE80"/>
+      <stop offset="50%" stop-color="#16A34A"/>
+      <stop offset="100%" stop-color="#14532D"/>
+    </linearGradient>
+    <linearGradient id="raceCockpitG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="neonGlowG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4ADE80" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#16A34A" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Underglow Neon -->
+  <ellipse cx="20" cy="35" rx="18" ry="30" fill="url(#neonGlowG)"/>
+
+  <!-- Wheels (Tires with Rims) -->
+  <rect x="2" y="10" width="6" height="14" rx="2" fill="#0F172A"/>
+  <rect x="3" y="13" width="4" height="8" rx="1" fill="#FACC15"/>
+  <rect x="32" y="10" width="6" height="14" rx="2" fill="#0F172A"/>
+  <rect x="33" y="13" width="4" height="8" rx="1" fill="#FACC15"/>
+  <rect x="1" y="46" width="7" height="16" rx="2" fill="#0F172A"/>
+  <rect x="2" y="49" width="5" height="10" rx="1" fill="#FACC15"/>
+  <rect x="32" y="46" width="7" height="16" rx="2" fill="#0F172A"/>
+  <rect x="33" y="49" width="5" height="10" rx="1" fill="#FACC15"/>
+
+  <!-- Heavy Tank Style Chassis -->
+  <path d="M10 6 C10 3 15 2 20 2 C25 2 30 3 30 6 L35 22 L36 56 C36 62 31 64 20 64 C9 64 4 62 4 56 L5 22 Z" fill="url(#raceGreen)"/>
+
+  <!-- Yellow Racing Stripes -->
+  <rect x="17" y="2" width="6" height="62" fill="#FDE047" opacity="0.9"/>
+  <rect x="19" y="2" width="2" height="62" fill="#14532D" opacity="0.6"/>
+
+  <!-- Reinforced Cockpit -->
+  <path d="M13 22 C13 18 16 16 20 16 C24 16 27 18 27 22 L28 38 C28 42 24 44 20 44 C16 44 12 42 12 38 Z" fill="url(#raceCockpitG)"/>
+  <ellipse cx="17" cy="25" rx="2" ry="5" fill="#FFFFFF" opacity="0.6"/>
+
+  <!-- Driver Helmet -->
+  <circle cx="20" cy="30" r="3.5" fill="#EF4444"/>
+  <rect x="19" y="28" width="3" height="2" rx="0.5" fill="#000000"/>
+
+  <!-- Dual Armor Bars -->
+  <rect x="6" y="28" width="4" height="20" rx="1" fill="#334155"/>
+  <rect x="30" y="28" width="4" height="20" rx="1" fill="#334155"/>
+
+  <!-- Heavy Spoiler -->
+  <rect x="2" y="60" width="36" height="6" rx="2" fill="#1E293B"/>
+  <rect x="4" y="61" width="32" height="2" fill="#22C55E"/>
+
+  <!-- Dual Beam Lights -->
+  <circle cx="12" cy="6" r="2.5" fill="#FEF08A"/>
+  <circle cx="28" cy="6" r="2.5" fill="#FEF08A"/>
 </svg>

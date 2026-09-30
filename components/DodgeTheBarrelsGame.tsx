@@ -16,8 +16,8 @@ const CLIMB_SPEED = 2;
 
 // Assets
 const ASSETS = {
-    jumpman: '/assets/dodge-the-barrels/jumpman.svg',
-    dk: '/assets/dodge-the-barrels/dk.svg',
+    climber: '/assets/dodge-the-barrels/climber.svg',
+    gorilla: '/assets/dodge-the-barrels/gorilla.svg',
     barrel: '/assets/dodge-the-barrels/barrel.svg',
     princess: '/assets/dodge-the-barrels/princess.svg'
 };
@@ -94,8 +94,8 @@ export default function DodgeTheBarrelsGame() {
         platforms.push({ x: 0, y: 480, width: 600, height: 20, type: 'floor' });
 
         if (course === 1) {
-            // Course 1 (Levels 1-10): The Classic (User Request)
-            // 3 main levels + shorter Kong level + Princess
+            // Course 1 (Levels 1-10): The Classic
+            // 3 main levels + boss level + Princess
 
             // Floor 1
             platforms.push({ x: 0, y: 380, width: 500, height: 20, type: 'floor' });
@@ -109,13 +109,13 @@ export default function DodgeTheBarrelsGame() {
             platforms.push({ x: 0, y: 180, width: 500, height: 20, type: 'floor' });
             platforms.push({ x: 470, y: 180, width: 20, height: 100, type: 'ladder' }); // F2 to F3
 
-            // Kong Floor (Shorter/Cut)
-            platforms.push({ x: 50, y: 100, width: 300, height: 20, type: 'floor' }); // DK stands here
-            platforms.push({ x: 130, y: 100, width: 20, height: 80, type: 'ladder' }); // F3 to Kong
+            // Boss Floor
+            platforms.push({ x: 50, y: 100, width: 300, height: 20, type: 'floor' }); // Boss stands here
+            platforms.push({ x: 130, y: 100, width: 20, height: 80, type: 'ladder' }); // F3 to Boss
 
             // Princess Platform (Top)
             platforms.push({ x: 200, y: 40, width: 100, height: 10, type: 'floor' });
-            platforms.push({ x: 240, y: 40, width: 20, height: 60, type: 'ladder' }); // Kong to Princess
+            platforms.push({ x: 240, y: 40, width: 20, height: 60, type: 'ladder' }); // Boss to Princess
 
         } else if (course === 2) {
             // Course 2 (Levels 11-20): The Factory (Gaps)
@@ -203,7 +203,7 @@ export default function DodgeTheBarrelsGame() {
             'B': 'Space',
         };
         const key = keyMap[action];
-        // Donkey Kong implementation relies on keysRef
+        // Control input relies on keysRef
         if (key) {
             keysRef.current[key] = active;
         }
@@ -325,20 +325,18 @@ export default function DodgeTheBarrelsGame() {
             if (player.y > CANVAS_HEIGHT) handleGameOver(); // Fell off
 
             // --- Win Condition ---
-            // Reaching the Princess platform (topmost)
-            const princessPlat = platformsRef.current[platformsRef.current.length - 2]; // 2nd to last is princess floor
-            if (player.y + player.height <= princessPlat.y &&
-                player.x > princessPlat.x &&
-                player.x < princessPlat.x + princessPlat.width) {
+            // Reaching the rescue goal platform (topmost)
+            const goalPlat = platformsRef.current[platformsRef.current.length - 2]; // 2nd to last is goal floor
+            if (player.y + player.height <= goalPlat.y &&
+                player.x > goalPlat.x &&
+                player.x < goalPlat.x + goalPlat.width) {
                 handleLevelComplete();
             }
 
             // --- Barrels ---
             barrelTimerRef.current++;
             if (barrelTimerRef.current > spawnRate) {
-                // Spawn at DK's position (approx)
-                // Find Kong floor (usually 4th or 5th platform)
-                // Default spawn: Top left-ish
+                // Spawn at boss position (top left)
                 barrelsRef.current.push({
                     x: 100, y: 80, vx: barrelSpeed, vy: 0, radius: 10, active: true
                 });
@@ -410,7 +408,7 @@ export default function DodgeTheBarrelsGame() {
 
             // Player
             const p = playerRef.current;
-            const pImg = imagesRef.current['jumpman'];
+            const pImg = imagesRef.current['climber'];
             if (pImg && pImg.complete) {
                 ctx.drawImage(pImg, p.x, p.y, p.width, p.height);
             } else {
@@ -418,10 +416,10 @@ export default function DodgeTheBarrelsGame() {
                 ctx.fillRect(p.x, p.y, p.width, p.height);
             }
 
-            // Donkey Kong
-            const dkImg = imagesRef.current['dk'];
-            if (dkImg && dkImg.complete) {
-                ctx.drawImage(dkImg, 50, 40, 60, 60);
+            // Gorilla
+            const gorillaImg = imagesRef.current['gorilla'];
+            if (gorillaImg && gorillaImg.complete) {
+                ctx.drawImage(gorillaImg, 50, 40, 60, 60);
             }
 
             // Princess
@@ -469,15 +467,24 @@ export default function DodgeTheBarrelsGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:pb-0">
-            <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[600px] text-xs min-[1380px]:text-xl font-mono text-red-500 px-4 min-[1380px]:px-0">
-                <div>SCORE: {score}</div>
-                <div>LEVEL: {level}</div>
-                <div>LIVES: {lives}</div>
+        <div className="w-full h-full max-h-full flex flex-col items-center justify-between min-h-0 overflow-hidden relative">
+            <div className="flex-none py-1.5 px-4 flex justify-between items-center w-full max-w-[600px] text-xs sm:text-sm font-mono text-red-500 bg-gray-900/80 rounded-lg border border-gray-800 shadow-md">
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">SCORE:</span>
+                    <span className="text-white font-bold">{score}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LEVEL:</span>
+                    <span className="text-orange-400 font-bold">{level}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LIVES:</span>
+                    <span className="text-red-400 font-bold">{lives}</span>
+                </div>
             </div>
 
-            <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
-                <div className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] max-h-full max-w-full aspect-[6/5] w-auto h-auto flex">
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1 sm:p-2 relative">
+                <div className="relative border-2 sm:border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] max-h-full max-w-full aspect-[6/5] w-auto h-auto flex overflow-hidden">
                     <canvas
                         ref={canvasRef}
                         width={CANVAS_WIDTH}
@@ -487,10 +494,10 @@ export default function DodgeTheBarrelsGame() {
 
                     {/* Overlays */}
                     {gameState === 'START' && (
-                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-red-600 mb-4 animate-pulse">DODGE THE BARRELS</h2>
-                            <p className="text-gray-400 mb-8">Save the Princess!</p>
-                            <Button onClick={startGame} className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-8 py-4 text-xl">
+                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-3xl sm:text-4xl font-bold text-red-600 mb-4 animate-pulse font-mono">DODGE THE BARRELS</h2>
+                            <p className="text-gray-400 mb-6 text-sm sm:text-base">Save the Princess!</p>
+                            <Button onClick={startGame} className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl rounded-lg">
                                 INSERT COIN
                             </Button>
                         </div>
@@ -498,10 +505,10 @@ export default function DodgeTheBarrelsGame() {
 
                     {/* Game Over */}
                     {gameState === 'GAME_OVER' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
-                            <p className="text-white text-xl mb-8">Score: {score}</p>
-                            <Button onClick={startGame} className="bg-white hover:bg-gray-200 text-black font-bold px-8 py-4">
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold text-red-500 mb-4 font-mono">GAME OVER</h2>
+                            <p className="text-white text-xl mb-6 font-mono">Score: <span className="text-orange-400 font-bold">{score}</span></p>
+                            <Button onClick={startGame} className="bg-white hover:bg-gray-200 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 font-mono">
                                 TRY AGAIN
                             </Button>
                         </div>
@@ -509,10 +516,10 @@ export default function DodgeTheBarrelsGame() {
 
                     {/* Victory */}
                     {gameState === 'VICTORY' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-pink-500 mb-4">YOU WON!</h2>
-                            <p className="text-white text-xl mb-8">The Princess is Saved!</p>
-                            <Button onClick={startGame} className="bg-pink-500 hover:bg-pink-600 text-black font-bold px-8 py-4">
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold text-pink-500 mb-4 font-mono">YOU WON!</h2>
+                            <p className="text-white text-xl mb-6 font-mono">The Princess is Saved!</p>
+                            <Button onClick={startGame} className="bg-pink-500 hover:bg-pink-600 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 font-mono">
                                 PLAY AGAIN
                             </Button>
                         </div>
@@ -520,9 +527,9 @@ export default function DodgeTheBarrelsGame() {
 
                     {/* Auth Required */}
                     {gameState === 'AUTH_REQUIRED' && (
-                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8 z-20">
                             <h2 className="text-3xl font-bold text-red-500 mb-4">LEVEL 3 LOCKED</h2>
-                            <p className="text-gray-300 mb-8">Sign in to continue your career!</p>
+                            <p className="text-gray-300 mb-6">Sign in to continue your career!</p>
                             <SignInButton mode="modal">
                                 <Button className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 text-xl">
                                     SIGN IN
@@ -534,11 +541,11 @@ export default function DodgeTheBarrelsGame() {
                 </div>
             </div>
 
-            <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-500 text-[10px] min-[1380px]:text-sm font-mono mt-4 hidden min-[400px]:block">
+            <div className="flex-none py-1 px-3 text-gray-400 text-[10px] sm:text-xs font-mono hidden min-[400px]:block bg-gray-900/40 rounded-md border border-gray-800">
                 ARROWS to Move/Climb • SPACE to Jump
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="DODGE_THE_BARRELS" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="DODGE_THE_BARRELS" className="lg:hidden" />
         </div>
     );
 }

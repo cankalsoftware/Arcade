@@ -15,11 +15,11 @@ const CANVAS_HEIGHT = ROWS * GRID_SIZE; // 520
 
 // Assets
 const ASSETS = {
-    frog: '/assets/jumptheriver/frog.svg',
-    car: '/assets/jumptheriver/car.svg',
-    truck: '/assets/jumptheriver/truck.svg',
-    log: '/assets/jumptheriver/log.svg',
-    turtle: '/assets/jumptheriver/turtle.svg'
+    frog: '/assets/jump-the-river/frog.svg',
+    car: '/assets/jump-the-river/car.svg',
+    truck: '/assets/jump-the-river/truck.svg',
+    log: '/assets/jump-the-river/log.svg',
+    turtle: '/assets/jump-the-river/turtle.svg'
 };
 
 interface Lane {
@@ -365,15 +365,24 @@ export default function JumpTheRiverGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:pb-0">
-            <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[600px] text-xs min-[1380px]:text-xl font-mono text-green-500 px-4 min-[1380px]:px-0">
-                <div>SCORE: {score}</div>
-                <div>LEVEL: {level}</div>
-                <div>TIME: {timeLeft}</div>
+        <div className="w-full h-full max-h-full flex flex-col items-center justify-between min-h-0 overflow-hidden relative">
+            <div className="flex-none py-1.5 px-4 flex justify-between items-center w-full max-w-[600px] text-xs sm:text-sm font-mono text-green-500 bg-gray-900/80 rounded-lg border border-gray-800 shadow-md">
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">SCORE:</span>
+                    <span className="text-white font-bold">{score}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LEVEL:</span>
+                    <span className="text-yellow-400 font-bold">{level}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">TIME:</span>
+                    <span className="text-green-400 font-bold">{timeLeft}s</span>
+                </div>
             </div>
 
-            <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
-                <div className="relative border-4 border-green-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,255,0,0.3)] max-h-full max-w-full aspect-[15/13] w-auto h-auto flex">
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1 sm:p-2 relative">
+                <div className="relative border-2 sm:border-4 border-green-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,255,0,0.3)] max-h-full max-w-full aspect-[15/13] w-auto h-auto flex overflow-hidden">
                     <canvas
                         ref={canvasRef}
                         width={CANVAS_WIDTH}
@@ -383,10 +392,10 @@ export default function JumpTheRiverGame() {
 
                     {/* Overlays */}
                     {gameState === 'START' && (
-                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-green-500 mb-4 animate-pulse">JUMP_THE_RIVER</h2>
-                            <p className="text-gray-400 mb-8">Cross the Road & River!</p>
-                            <Button onClick={startGame} className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-4 text-xl">
+                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-3xl sm:text-4xl font-bold text-green-500 mb-4 animate-pulse font-mono">JUMP THE RIVER</h2>
+                            <p className="text-gray-400 mb-6 text-sm sm:text-base">Cross the Road &amp; River!</p>
+                            <Button onClick={startGame} className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl rounded-lg">
                                 INSERT COIN
                             </Button>
                         </div>
@@ -394,10 +403,10 @@ export default function JumpTheRiverGame() {
 
                     {/* Game Over */}
                     {gameState === 'GAME_OVER' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
-                            <p className="text-white text-xl mb-8">Score: {score}</p>
-                            <Button onClick={startGame} className="bg-white hover:bg-gray-200 text-black font-bold px-8 py-4">
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold text-red-500 mb-4 font-mono">GAME OVER</h2>
+                            <p className="text-white text-xl mb-6 font-mono">Score: <span className="text-green-400 font-bold">{score}</span></p>
+                            <Button onClick={startGame} className="bg-white hover:bg-gray-200 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 font-mono">
                                 TRY AGAIN
                             </Button>
                         </div>
@@ -405,10 +414,10 @@ export default function JumpTheRiverGame() {
 
                     {/* Victory */}
                     {gameState === 'VICTORY' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-yellow-500 mb-4">YOU WON!</h2>
-                            <p className="text-white text-xl mb-8">Master Frog!</p>
-                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4">
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold text-yellow-500 mb-4 font-mono">YOU WON!</h2>
+                            <p className="text-white text-xl mb-6 font-mono">Master Frog!</p>
+                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 font-mono">
                                 PLAY AGAIN
                             </Button>
                         </div>
@@ -416,9 +425,9 @@ export default function JumpTheRiverGame() {
 
                     {/* Auth Required */}
                     {gameState === 'AUTH_REQUIRED' && (
-                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8 z-20">
                             <h2 className="text-3xl font-bold text-red-500 mb-4">LEVEL 3 LOCKED</h2>
-                            <p className="text-gray-300 mb-8">Sign in to continue your career!</p>
+                            <p className="text-gray-300 mb-6">Sign in to continue your career!</p>
                             <SignInButton mode="modal">
                                 <Button className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 text-xl">
                                     SIGN IN
@@ -430,11 +439,11 @@ export default function JumpTheRiverGame() {
                 </div>
             </div>
 
-            <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-500 text-[10px] min-[1380px]:text-sm font-mono mt-4 hidden min-[400px]:block">
+            <div className="flex-none py-1 px-3 text-gray-400 text-[10px] sm:text-xs font-mono hidden min-[400px]:block bg-gray-900/40 rounded-md border border-gray-800">
                 ARROWS to Hop
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="JUMP_THE_RIVER" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="JUMP_THE_RIVER" className="lg:hidden" />
         </div>
     );
 }

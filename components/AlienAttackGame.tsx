@@ -496,15 +496,27 @@ export default function AlienAttackGame() {
     }, [gameState, levelConfig, level, score, submitScore, clearSaveMutation, nextLevel, showAuthOverlay, canvasWidth, selectedShipIndex]);
 
     return (
-        <div className="flex flex-col items-center gap-4 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:pb-0">
-            <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[800px] text-white font-mono text-xs min-[1380px]:text-xl px-4 min-[1380px]:px-0">
-                <div>SCORE: {score}</div>
-                <div>LEVEL: {level}</div>
-                <div>LIVES: {lives}</div>
+        <div className="w-full h-full max-h-full flex flex-col items-center justify-between min-h-0 overflow-hidden relative">
+            <div className="flex-none py-1.5 px-4 flex justify-between items-center w-full max-w-[800px] text-white font-mono text-xs sm:text-sm bg-gray-900/80 rounded-lg border border-gray-800 shadow-md">
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">SCORE:</span>
+                    <span className="text-green-400 font-bold">{score}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LEVEL:</span>
+                    <span className="text-yellow-400 font-bold">{level}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LIVES:</span>
+                    <span className="text-red-400 font-bold">{lives}</span>
+                </div>
             </div>
 
-            <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
-                <div className="relative max-h-full max-w-full aspect-[4/3] w-auto h-auto flex" style={{ aspectRatio: `${canvasWidth} / ${CANVAS_HEIGHT}` }}>
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1 sm:p-2 relative">
+                <div 
+                    className="relative max-h-full max-w-full flex items-center justify-center rounded-lg border-2 border-green-500/50 bg-black shadow-[0_0_20px_rgba(34,197,94,0.3)] overflow-hidden" 
+                    style={{ aspectRatio: `${canvasWidth} / ${CANVAS_HEIGHT}` }}
+                >
                     <canvas
                         ref={canvasRef}
                         width={canvasWidth}
@@ -513,7 +525,7 @@ export default function AlienAttackGame() {
                     />
 
                     {showAuthOverlay && (
-                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8 z-30">
                             <h2 className="text-3xl font-bold text-red-500 mb-4">LEVEL 3 LOCKED</h2>
                             <p className="text-gray-300 mb-8">You need to be logged in to play past Level 2!</p>
                             <SignInButton mode="modal">
@@ -532,43 +544,43 @@ export default function AlienAttackGame() {
                     )}
 
                     {gameState === 'START' && !showAuthOverlay && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
-                            <h1 className="text-6xl font-bold mb-8 text-green-500 font-mono tracking-widest">ALIEN ATTACK</h1>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white z-20">
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-green-500 font-mono tracking-widest text-center">ALIEN ATTACK</h1>
                             <button
                                 onClick={() => startGame(false)}
-                                className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded text-2xl font-bold transition-all transform hover:scale-105 mb-4"
+                                className="px-6 sm:px-8 py-3 sm:py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xl sm:text-2xl font-bold transition-all transform hover:scale-105 mb-3 shadow-lg"
                             >
                                 NEW GAME
                             </button>
                             {loadGameQuery && (
                                 <button
                                     onClick={() => startGame(true)}
-                                    className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded text-2xl font-bold transition-all transform hover:scale-105"
+                                    className="px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xl sm:text-2xl font-bold transition-all transform hover:scale-105 shadow-lg"
                                 >
                                     RESUME GAME (Lvl {loadGameQuery.level})
                                 </button>
                             )}
-                            <p className="mt-4 text-gray-400">Use Arrow Keys to Move • Space to Shoot</p>
+                            <p className="mt-4 text-gray-400 text-xs sm:text-sm font-mono text-center">Use Arrow Keys to Move • Space to Shoot</p>
                         </div>
                     )}
 
                     {gameState === 'SHIP_SELECTION' && !showAuthOverlay && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
-                            <h2 className="text-4xl font-bold mb-8 text-blue-400">SELECT YOUR SHIP</h2>
-                            <div className="flex gap-8 mb-8">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white z-20">
+                            <h2 className="text-2xl sm:text-4xl font-bold mb-6 text-blue-400 font-mono">SELECT YOUR SHIP</h2>
+                            <div className="flex gap-4 sm:gap-8 mb-6">
                                 {PLAYER_SHIPS.map((ship, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedShipIndex(index)}
-                                        className={`p-4 border-2 rounded-lg transition-all ${selectedShipIndex === index ? 'border-green-500 bg-green-500/20 scale-110' : 'border-gray-600 hover:border-gray-400'}`}
+                                        className={`p-3 sm:p-4 border-2 rounded-lg transition-all ${selectedShipIndex === index ? 'border-green-500 bg-green-500/20 scale-110' : 'border-gray-600 hover:border-gray-400'}`}
                                     >
-                                        <NextImage src={ship} alt={`Ship ${index + 1}`} width={64} height={64} className="w-16 h-16 object-contain" />
+                                        <NextImage src={ship} alt={`Ship ${index + 1}`} width={64} height={64} className="w-12 h-12 sm:w-16 sm:h-16 object-contain" />
                                     </button>
                                 ))}
                             </div>
                             <button
                                 onClick={confirmShipSelection}
-                                className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded text-2xl font-bold transition-all"
+                                className="px-6 sm:px-8 py-3 sm:py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xl sm:text-2xl font-bold transition-all"
                             >
                                 LAUNCH
                             </button>
@@ -576,18 +588,18 @@ export default function AlienAttackGame() {
                     )}
 
                     {gameState === 'LEVEL_TRANSITION' && !showAuthOverlay && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
-                            <h2 className="text-4xl font-bold mb-4 text-green-400">LEVEL {level} COMPLETE!</h2>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white z-20">
+                            <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-green-400 font-mono">LEVEL {level} COMPLETE!</h2>
                             <div className="flex gap-4">
                                 <button
                                     onClick={startNextLevel}
-                                    className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded text-xl font-bold"
+                                    className="px-5 sm:px-6 py-2.5 sm:py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg text-lg sm:text-xl font-bold"
                                 >
                                     NEXT LEVEL
                                 </button>
                                 <button
                                     onClick={saveAndQuit}
-                                    className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded text-xl font-bold"
+                                    className="px-5 sm:px-6 py-2.5 sm:py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-lg sm:text-xl font-bold"
                                 >
                                     SAVE & QUIT
                                 </button>
@@ -596,12 +608,12 @@ export default function AlienAttackGame() {
                     )}
 
                     {gameState === 'GAME_OVER' && !showAuthOverlay && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
-                            <h2 className="text-5xl font-bold mb-4 text-red-500">GAME OVER</h2>
-                            <p className="text-2xl mb-8">Final Score: {score}</p>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-red-500 font-mono">GAME OVER</h2>
+                            <p className="text-xl sm:text-2xl mb-6 font-mono">Final Score: <span className="text-green-400 font-bold">{score}</span></p>
                             <button
                                 onClick={() => setGameState('START')}
-                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded text-xl font-bold"
+                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-lg sm:text-xl font-bold font-mono"
                             >
                                 MAIN MENU
                             </button>
@@ -609,12 +621,12 @@ export default function AlienAttackGame() {
                     )}
 
                     {gameState === 'VICTORY' && !showAuthOverlay && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white">
-                            <h2 className="text-5xl font-bold mb-4 text-yellow-400">VICTORY!</h2>
-                            <p className="text-2xl mb-8">Final Score: {score}</p>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-white z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-yellow-400 font-mono">VICTORY!</h2>
+                            <p className="text-xl sm:text-2xl mb-6 font-mono">Final Score: <span className="text-green-400 font-bold">{score}</span></p>
                             <button
                                 onClick={() => setGameState('START')}
-                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded text-xl font-bold"
+                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-lg sm:text-xl font-bold font-mono"
                             >
                                 MAIN MENU
                             </button>
@@ -624,20 +636,20 @@ export default function AlienAttackGame() {
                 </div>
             </div>
 
-            {/* Controls Legend - hidden on nice screens */}
-            <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-400 font-mono text-[10px] min-[1380px]:text-sm flex flex-wrap justify-center gap-4 bg-gray-900/50 p-2 rounded-lg border border-gray-800 min-[1380px]:p-4 min-[1380px]:gap-6 hidden min-[400px]:flex">
-                <div className="flex items-center gap-2">
-                    <span className="bg-gray-800 px-2 py-1 rounded text-green-400">←</span> <span>Left</span>
+            {/* Controls Legend */}
+            <div className="flex-none py-1 px-3 text-gray-400 font-mono text-[10px] sm:text-xs hidden min-[400px]:flex items-center justify-center gap-4 bg-gray-900/40 rounded-md border border-gray-800">
+                <div className="flex items-center gap-1.5">
+                    <span className="bg-gray-800 px-1.5 py-0.5 rounded text-green-400 font-bold">←</span> <span>Left</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <span className="bg-gray-800 px-2 py-1 rounded text-green-400">→</span> <span>Right</span>
+                <div className="flex items-center gap-1.5">
+                    <span className="bg-gray-800 px-1.5 py-0.5 rounded text-green-400 font-bold">→</span> <span>Right</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <span className="bg-gray-800 px-2 py-1 rounded text-green-400">SPACE</span> <span>Shoot</span>
+                <div className="flex items-center gap-1.5">
+                    <span className="bg-gray-800 px-1.5 py-0.5 rounded text-green-400 font-bold">SPACE</span> <span>Shoot</span>
                 </div>
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="ALIEN_ATTACK" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="ALIEN_ATTACK" className="lg:hidden" />
         </div>
     );
 }

@@ -1,0 +1,39 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FBBF24" stop-opacity="0.8"/>
+      <stop offset="60%" stop-color="#D97706" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#92400E" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="nugget1" x1="12" y1="18" x2="32" y2="38" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="40%" stop-color="#FACC15"/>
+      <stop offset="80%" stop-color="#CA8A04"/>
+      <stop offset="100%" stop-color="#854D0E"/>
+    </linearGradient>
+    <linearGradient id="nugget2" x1="20" y1="10" x2="40" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFBEB"/>
+      <stop offset="50%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="24" cy="24" r="22" fill="url(#goldGlow)"/>
+
+  <!-- Base Nugget Stack -->
+  <!-- Bottom Left Nugget -->
+  <path d="M10 28 C8 22 14 18 20 19 C25 20 28 25 26 31 C24 37 16 38 11 34 C8 32 8 30 10 28 Z" fill="url(#nugget1)"/>
+  <path d="M13 22 Q17 19 21 23" stroke="#FEF9C3" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Bottom Right Nugget -->
+  <path d="M22 26 C22 20 30 17 36 21 C41 24 42 30 38 35 C34 40 25 39 22 34 C21 31 21 28 22 26 Z" fill="url(#nugget1)"/>
+  <path d="M27 22 Q33 20 37 25" stroke="#FEF9C3" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Top Center Nugget -->
+  <path d="M16 16 C16 11 23 8 30 11 C35 13 36 18 33 23 C29 27 20 26 17 22 C15 20 15 18 16 16 Z" fill="url(#nugget2)"/>
+  <path d="M20 12 Q25 10 30 14" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Gold Shimmer Stars -->
+  <polygon points="26,8 27.5,12 31.5,13.5 27.5,15 26,19 24.5,15 20.5,13.5 24.5,12" fill="#FFFFFF"/>
+  <polygon points="12,25 13,27 15,28 13,29 12,31 11,29 9,28 11,27" fill="#FEF08A"/>
+</svg>

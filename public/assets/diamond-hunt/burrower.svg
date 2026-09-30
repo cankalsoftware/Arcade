@@ -1,0 +1,58 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="burrowerBody" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FB7185"/>
+      <stop offset="50%" stop-color="#E11D48"/>
+      <stop offset="100%" stop-color="#881337"/>
+    </radialGradient>
+    <radialGradient id="glowEye" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="70%" stop-color="#EAB308"/>
+      <stop offset="100%" stop-color="#713F12"/>
+    </radialGradient>
+    <linearGradient id="antennaGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Digging Paws / Claws -->
+  <ellipse cx="14" cy="42" rx="5" ry="3.5" fill="#BE123C"/>
+  <ellipse cx="34" cy="42" rx="5" ry="3.5" fill="#BE123C"/>
+  <polygon points="10,43 12,46 14,43" fill="#FFE4E6"/>
+  <polygon points="14,43 16,46 18,43" fill="#FFE4E6"/>
+  <polygon points="30,43 32,46 34,43" fill="#FFE4E6"/>
+  <polygon points="34,43 36,46 38,43" fill="#FFE4E6"/>
+
+  <!-- Round Subterranean Body -->
+  <circle cx="24" cy="25" r="17" fill="url(#burrowerBody)"/>
+  
+  <!-- Bioluminescent Antennae -->
+  <path d="M18 10 Q14 3 10 5" stroke="#E11D48" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <circle cx="9" cy="5" r="3.5" fill="url(#antennaGlow)"/>
+  <circle cx="9" cy="5" r="1.5" fill="#FFFFFF"/>
+
+  <path d="M30 10 Q34 3 38 5" stroke="#E11D48" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <circle cx="39" cy="5" r="3.5" fill="url(#antennaGlow)"/>
+  <circle cx="39" cy="5" r="1.5" fill="#FFFFFF"/>
+
+  <!-- Big Glowing Gem Eyes -->
+  <circle cx="17" cy="22" r="6.5" fill="url(#glowEye)"/>
+  <circle cx="17" cy="22" r="4.5" fill="#1C1917"/>
+  <circle cx="18" cy="21" r="2" fill="#FEF08A"/>
+  <circle cx="16" cy="20" r="1" fill="#FFFFFF"/>
+
+  <circle cx="31" cy="22" r="6.5" fill="url(#glowEye)"/>
+  <circle cx="31" cy="22" r="4.5" fill="#1C1917"/>
+  <circle cx="32" cy="21" r="2" fill="#FEF08A"/>
+  <circle cx="30" cy="20" r="1" fill="#FFFFFF"/>
+
+  <!-- Miner Snout & Cute Cheeks -->
+  <ellipse cx="24" cy="29" rx="5" ry="3.5" fill="#FDA4AF"/>
+  <circle cx="22" cy="29" r="1" fill="#881337"/>
+  <circle cx="26" cy="29" r="1" fill="#881337"/>
+
+  <!-- Cute Rosy Cheek Patches -->
+  <circle cx="10" cy="30" r="3" fill="#FB7185" opacity="0.6"/>
+  <circle cx="38" cy="30" r="3" fill="#FB7185" opacity="0.6"/>
+</svg>

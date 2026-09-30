@@ -1,5 +1,32 @@
-<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-  <path d="M20,10 Q35,5 35,20 Q35,35 20,35 Q5,35 5,20 Q5,5 20,10 Z" fill="#000" opacity="0.8"/>
-  <ellipse cx="15" cy="18" rx="3" ry="2" fill="#333" opacity="0.5"/>
-  <ellipse cx="25" cy="25" rx="4" ry="2" fill="#333" opacity="0.5"/>
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="oilSlick" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="50%" stop-color="#1E293B"/>
+      <stop offset="85%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <linearGradient id="rainbowSheen" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EC4899" stop-opacity="0.8"/>
+      <stop offset="35%" stop-color="#8B5CF6" stop-opacity="0.7"/>
+      <stop offset="70%" stop-color="#06B6D4" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Splattered Oil Puddle -->
+  <path d="M18 4 C28 3 38 12 36 22 C34 32 26 38 16 36 C6 34 2 24 6 14 C9 6 12 5 18 4 Z" fill="url(#oilSlick)"/>
+
+  <!-- Secondary Splatter Droplets -->
+  <circle cx="36" cy="10" r="2.5" fill="url(#oilSlick)"/>
+  <circle cx="38" cy="28" r="1.8" fill="url(#oilSlick)"/>
+  <circle cx="4" cy="28" r="2.2" fill="url(#oilSlick)"/>
+  <circle cx="8" cy="8" r="1.5" fill="url(#oilSlick)"/>
+
+  <!-- Rainbow Iridescent Oil Film Sheen -->
+  <path d="M14 10 C22 8 30 14 30 20 C30 26 24 30 16 28 C10 26 8 20 10 14 Z" fill="url(#rainbowSheen)"/>
+
+  <!-- Specular Reflection Glare -->
+  <path d="M12 12 Q20 10 26 16" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <circle cx="28" cy="24" r="1.5" fill="#FFFFFF" opacity="0.5"/>
 </svg>

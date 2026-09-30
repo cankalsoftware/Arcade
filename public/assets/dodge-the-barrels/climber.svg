@@ -1,0 +1,65 @@
+<svg width="40" height="60" viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="helmetGrad" x1="10" y1="2" x2="30" y2="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F97316"/>
+      <stop offset="100%" stop-color="#C2410C"/>
+    </linearGradient>
+    <linearGradient id="vestGrad" x1="10" y1="24" x2="30" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#0E7490"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="14" y1="12" x2="28" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FED7AA"/>
+      <stop offset="100%" stop-color="#FDBA74"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Climber Safety Helmet -->
+  <path d="M10 14 C10 6 18 3 28 3 C36 3 38 7 38 14 Z" fill="url(#helmetGrad)"/>
+  <!-- Headlamp / Badge on Helmet -->
+  <circle cx="28" cy="8" r="3" fill="#FEF08A"/>
+  <circle cx="28" cy="8" r="1.5" fill="#FFFFFF"/>
+  <!-- Helmet Rim / Strap -->
+  <path d="M10 14 H38" stroke="#7C2D12" stroke-width="2"/>
+  
+  <!-- Face -->
+  <circle cx="22" cy="18" r="8.5" fill="url(#skinGrad)"/>
+  <!-- Determined Eyes -->
+  <ellipse cx="26" cy="15" rx="2" ry="2.2" fill="#0F172A"/>
+  <circle cx="26.5" cy="14.3" r="0.7" fill="#FFFFFF"/>
+  <path d="M23 12 L28 13.5" stroke="#7C2D12" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Nose -->
+  <path d="M28 16 L30 18 H27" stroke="#EA580C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Determined Smile -->
+  <path d="M24 21 Q27 23 30 20" stroke="#7C2D12" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <!-- Ear -->
+  <ellipse cx="14" cy="18" rx="2" ry="3" fill="#FDBA74"/>
+
+  <!-- High-Vis Climbing Jacket / Vest -->
+  <rect x="10" y="24" width="20" height="13" rx="3" fill="#EA580C"/>
+  <rect x="13" y="24" width="14" height="13" fill="url(#vestGrad)"/>
+  <!-- Safety Harness Straps -->
+  <line x1="15" y1="24" x2="15" y2="37" stroke="#FEF08A" stroke-width="1.5"/>
+  <line x1="25" y1="24" x2="25" y2="37" stroke="#FEF08A" stroke-width="1.5"/>
+  <rect x="18" y="29" width="4" height="3" fill="#E2E8F0" rx="1"/>
+
+  <!-- Climbing Arms & Grip Gloves -->
+  <path d="M8 26 L4 34 L8 38 L12 32 Z" fill="#EA580C"/>
+  <circle cx="6" cy="38" r="4" fill="#334155"/>
+  <circle cx="6" cy="38" r="2.5" fill="#E2E8F0"/>
+
+  <path d="M28 26 L34 32 L38 30 L32 25 Z" fill="#EA580C"/>
+  <circle cx="37" cy="32" r="4" fill="#334155"/>
+
+  <!-- Cargo Trousers -->
+  <path d="M11 37 H29 V48 C29 50 27 52 24 52 H16 C13 52 11 50 11 48 Z" fill="#1E293B"/>
+  <rect x="11" y="44" width="7" height="8" fill="#1E293B"/>
+  <rect x="22" y="44" width="7" height="8" fill="#1E293B"/>
+
+  <!-- Rugged Trail / Climbing Boots -->
+  <path d="M8 52 C8 50 12 50 18 50 C19 54 18 58 10 58 C8 58 8 55 8 52 Z" fill="#D97706"/>
+  <rect x="9" y="56" width="10" height="2.5" fill="#451A03"/>
+  
+  <path d="M22 50 C28 50 32 50 32 52 C32 55 32 58 24 58 C22 58 21 54 22 50 Z" fill="#D97706"/>
+  <rect x="22" y="56" width="10" height="2.5" fill="#451A03"/>
+</svg>

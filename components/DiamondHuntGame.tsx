@@ -7,8 +7,6 @@ import MobileControls, { ControlAction } from '@/components/ui/MobileControls';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { getDiamondHuntLevel, TILE_SIZE, ROWS, COLS, EnemyConfig } from '@/lib/diamondhunt-maps';
-import Link from 'next/link';
-import Leaderboard from './Leaderboard';
 
 // --- Constants ---
 const PLAYER_SPEED_BASE = 0.2; // Speed 2
@@ -27,7 +25,7 @@ interface Entity {
     dir: Direction;
     nextDir: Direction;
     speed: number;
-    type: 'PLAYER' | 'POOKA' | 'FYGAR';
+    type: 'PLAYER' | 'BURROWER' | 'DRAKE';
     state: 'IDLE' | 'WALKING' | 'PUMPING' | 'INFLATED' | 'GHOST' | 'WET';
     inflation: number; // 0 to 1
     ghostTimer: number;
@@ -78,6 +76,19 @@ interface DelayedItem {
     timer: number;
 }
 
+// Assets
+const ASSETS = {
+    miner: '/assets/diamond-hunt/miner.svg',
+    burrower: '/assets/diamond-hunt/burrower.svg',
+    drake: '/assets/diamond-hunt/drake.svg',
+    diamond: '/assets/diamond-hunt/diamond.svg',
+    gold: '/assets/diamond-hunt/gold.svg',
+    silver: '/assets/diamond-hunt/silver.svg',
+    rock: '/assets/diamond-hunt/rock.svg',
+    bomb: '/assets/diamond-hunt/bomb.svg',
+    water: '/assets/diamond-hunt/water.svg',
+};
+
 export default function DiamondHuntGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { user } = useUser();
@@ -93,6 +104,18 @@ export default function DiamondHuntGame() {
     const [earthColor, setEarthColor] = useState('#964B00');
     const [levelName, setLevelName] = useState('LEVEL 1');
     const [diamondTimer, setDiamondTimer] = useState(0); // For UI display
+
+    // Asset Images Ref
+    const imagesRef = useRef<{ [key: string]: HTMLImageElement }>({});
+
+    // Load Assets
+    useEffect(() => {
+        Object.entries(ASSETS).forEach(([key, src]) => {
+            const img = new Image();
+            img.src = src;
+            imagesRef.current[key] = img;
+        });
+    }, []);
 
 
     // Refs
@@ -294,7 +317,7 @@ export default function DiamondHuntGame() {
             dir: 'NONE',
             nextDir: 'NONE',
             speed: ENEMY_SPEED,
-            type: Math.random() > 0.5 ? 'POOKA' : 'FYGAR',
+            type: Math.random() > 0.5 ? 'BURROWER' : 'DRAKE',
             state: 'WALKING',
             inflation: 0,
             ghostTimer: 0
@@ -548,7 +571,7 @@ export default function DiamondHuntGame() {
                                 playerRef.current.y = getDiamondHuntLevel(levelRef.current).diamondHuntStart.y;
                             } else {
                                 setGameState('GAME_OVER');
-                                submitScore({ score: scoreRef.current, level: levelRef.current, gameType: "dig_dug" });
+                                submitScore({ score: scoreRef.current, level: levelRef.current, gameType: "diamond-hunt" });
                             }
                         } else if (targetTile === 10) { // Gold
                             // Points Immediately
@@ -621,7 +644,7 @@ export default function DiamondHuntGame() {
                     levelRef.current++;
                     setLevel(levelRef.current);
                     initLevel(levelRef.current);
-                    submitScore({ score: scoreRef.current, level: levelRef.current - 1, gameType: "dig_dug" });
+                    submitScore({ score: scoreRef.current, level: levelRef.current - 1, gameType: "diamond-hunt" });
                     // Reset player to start? initLevel handles state reset but maybe visual transition needed.
                     // The loop continues but level resets.
                 }
@@ -688,7 +711,7 @@ export default function DiamondHuntGame() {
                     playerRef.current.y = getDiamondHuntLevel(levelRef.current).diamondHuntStart.y;
                 } else {
                     setGameState('GAME_OVER');
-                    submitScore({ score: scoreRef.current, level: levelRef.current, gameType: "dig_dug" });
+                    submitScore({ score: scoreRef.current, level: levelRef.current, gameType: "diamond-hunt" });
                 }
             }
         });
@@ -706,11 +729,11 @@ export default function DiamondHuntGame() {
         if (!ctx) return;
 
         const render = () => {
-            // Background
+            // Clear / Background Earth
             ctx.fillStyle = earthColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw Grid
+            // Draw Grid & Earth
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
                     const tile = mapRef.current[r][c];
@@ -718,158 +741,79 @@ export default function DiamondHuntGame() {
                     const y = r * TILE_SIZE;
 
                     if (tile === 0) {
-                        ctx.fillStyle = 'black';
+                        // Carved out tunnel
+                        ctx.fillStyle = '#080504';
                         ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+
+                        // Soft tunnel wall ambient shadow
+                        ctx.fillStyle = 'rgba(0,0,0,0.4)';
                         ctx.beginPath();
-                        ctx.arc(x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE / 2 - 2, 0, Math.PI * 2);
+                        ctx.arc(x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE / 2 + 2, 0, Math.PI * 2);
                         ctx.fill();
-                    } else if (tile === 30) { // Flood Water
-                        ctx.fillStyle = '#0000AA'; // Deep Blue
+                    } else if (tile === 30) {
+                        // Flood Water
+                        ctx.fillStyle = 'rgba(2, 132, 199, 0.85)';
                         ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-                        // Waves
-                        ctx.strokeStyle = '#0044FF';
-                        ctx.lineWidth = 2;
-                        ctx.beginPath();
-                        ctx.moveTo(x, y + 10);
-                        ctx.lineTo(x + TILE_SIZE, y + 10);
-                        ctx.moveTo(x, y + 30);
-                        ctx.lineTo(x + TILE_SIZE, y + 30);
-                        ctx.stroke();
-                    } else if (tile === 21) { // Revealed Gold
-                        ctx.fillStyle = '#FFD700';
-                        ctx.beginPath();
-                        ctx.arc(x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE / 3, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.strokeStyle = 'orange';
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-                    } else if (tile === 22) { // Revealed Diamond
-                        ctx.fillStyle = '#00FFFF';
-                        ctx.beginPath();
-                        ctx.moveTo(x + TILE_SIZE / 2, y + 8);
-                        ctx.lineTo(x + TILE_SIZE - 8, y + TILE_SIZE / 2);
-                        ctx.lineTo(x + TILE_SIZE / 2, y + TILE_SIZE - 8);
-                        ctx.lineTo(x + 8, y + TILE_SIZE / 2);
-                        ctx.closePath();
-                        ctx.fill();
-                        ctx.stroke();
+                        if (imagesRef.current['water']) {
+                            ctx.drawImage(imagesRef.current['water'], x + 4, y + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+                        }
+                    } else if (tile === 21) {
+                        // Revealed Gold
+                        ctx.fillStyle = '#140c06';
+                        ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                        if (imagesRef.current['gold']) {
+                            const bounce = Math.sin(Date.now() / 150) * 2;
+                            ctx.drawImage(imagesRef.current['gold'], x + 2, y + 2 + bounce, TILE_SIZE - 4, TILE_SIZE - 4);
+                        }
+                    } else if (tile === 22) {
+                        // Revealed Diamond
+                        ctx.fillStyle = '#060d14';
+                        ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                        if (imagesRef.current['diamond']) {
+                            const bounce = Math.sin(Date.now() / 120) * 3;
+                            ctx.drawImage(imagesRef.current['diamond'], x + 2, y + 2 + bounce, TILE_SIZE - 4, TILE_SIZE - 4);
+                        }
+                    } else {
+                        // Solid Dirt / Soil texture
+                        ctx.fillStyle = earthColor;
+                        ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+
+                        // Subtle soil flecks & stratum lines
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+                        ctx.fillRect(x + 2, y + 2, TILE_SIZE - 4, 2);
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+                        ctx.fillRect(x + 2, y + TILE_SIZE - 4, TILE_SIZE - 4, 2);
                     }
                 }
             }
 
-            // Draw Rocks (Varied Shapes)
+            // Draw Rocks
             rocksRef.current.forEach(r => {
                 const rx = r.x * TILE_SIZE;
                 const ry = r.y * TILE_SIZE;
-                const cx = rx + TILE_SIZE / 2;
-                const cy = ry + TILE_SIZE / 2;
-                const rSize = (TILE_SIZE / 2 - 4) * r.scale;
-
-                ctx.fillStyle = '#555'; // Dark Gray
-                ctx.beginPath();
-
-                if (r.variant === 1) { // Jagged
-                    const sides = 6;
-                    ctx.moveTo(cx + rSize, cy);
-                    for (let i = 1; i < sides; i++) {
-                        const angle = (i * 2 * Math.PI) / sides;
-                        const len = rSize * (0.8 + Math.random() * 0.4); // Jittery
-                        ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
-                    }
-                } else if (r.variant === 2) { // Flat/Oval
-                    ctx.ellipse(cx, cy, rSize, rSize * 0.6, 0, 0, Math.PI * 2);
-                } else { // Round (Default)
-                    ctx.arc(cx, cy, rSize, 0, Math.PI * 2);
+                let wobbleX = 0;
+                if (r.state === 'WOBBLE') {
+                    wobbleX = Math.sin(Date.now() / 30) * 3;
                 }
 
-                ctx.closePath();
-                ctx.fill();
-
-                // Shine
-                ctx.fillStyle = '#777';
-                ctx.beginPath();
-                ctx.arc(cx - rSize / 2, cy - rSize / 2, rSize / 4, 0, Math.PI * 2);
-                ctx.fill();
+                if (imagesRef.current['rock']) {
+                    const rSize = TILE_SIZE * r.scale;
+                    const offset = (TILE_SIZE - rSize) / 2;
+                    ctx.drawImage(imagesRef.current['rock'], rx + offset + wobbleX, ry + offset, rSize, rSize);
+                } else {
+                    ctx.fillStyle = '#64748B';
+                    ctx.beginPath();
+                    ctx.arc(rx + TILE_SIZE / 2 + wobbleX, ry + TILE_SIZE / 2, TILE_SIZE / 2 - 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             });
-
-            // Draw Player ("Running Man" - Procedural)
-            const p = playerRef.current;
-            const px = p.x * TILE_SIZE;
-            const py = p.y * TILE_SIZE;
-
-            // Animation Frame
-            const isMoving = p.state === 'WALKING' || p.state === 'WET';
-            const frame = Math.floor(Date.now() / 150) % 2; // Slower stride
-
-            // Color Palette
-            const SUIT_COLOR = '#FFFFFF';
-            const SKIN_COLOR = '#FFCCAA';
-            const BOOT_COLOR = '#FF0000';
-
-            ctx.save();
-            ctx.translate(px + TILE_SIZE / 2, py + TILE_SIZE / 2);
-
-            // Scale Up for "Chunky" Look (Fits tile better)
-            ctx.scale(1.45, 1.45);
-
-            // Flip for Left
-            if (p.dir === 'LEFT') ctx.scale(-1, 1);
-            if (p.dir === 'UP') ctx.rotate(-Math.PI / 2);
-            if (p.dir === 'DOWN') ctx.rotate(Math.PI / 2);
-
-            // Draw Body (Wider)
-            ctx.fillStyle = SUIT_COLOR;
-            ctx.fillRect(-8, -6, 16, 12);
-
-            // Draw Legs (Running Animation - Wider Stance)
-            ctx.fillStyle = BOOT_COLOR;
-            if (isMoving) {
-                if (frame === 0) {
-                    ctx.fillRect(-9, 6, 7, 8); // Back Leg
-                    ctx.fillRect(2, 6, 7, 8);  // Front Leg
-                } else {
-                    ctx.fillRect(-4, 6, 7, 8);
-                    ctx.fillRect(4, 6, 7, 6);  // Kick
-                }
-            } else {
-                ctx.fillRect(-8, 6, 6, 8);
-                ctx.fillRect(2, 6, 6, 8);
-            }
-
-            // Draw Head (Larger)
-            ctx.fillStyle = SUIT_COLOR;
-            ctx.beginPath();
-            ctx.arc(0, -9, 9, 0, Math.PI * 2); // Radius 9, shifted up
-            ctx.fill();
-
-            // Visor (Wider)
-            ctx.fillStyle = SKIN_COLOR;
-            ctx.fillRect(2, -11, 7, 5);
-
-            // Draw Arms (Pump vs Run)
-            ctx.fillStyle = SUIT_COLOR;
-            if (p.state === 'PUMPING') {
-                ctx.fillRect(0, -2, 14, 5); // Arm extended (Longer/Thicker)
-                // Gun
-                ctx.fillStyle = 'red';
-                ctx.fillRect(14, -3, 5, 7);
-            } else {
-                // Running Arms
-                if (isMoving && frame === 0) {
-                    ctx.fillRect(-2, -2, 9, 5);
-                } else {
-                    ctx.fillRect(-5, -2, 9, 5);
-                }
-            }
-
-            ctx.restore();
 
             // Draw Pump Hose
             if (pumpRef.current.active) {
-                ctx.strokeStyle = 'white';
-                ctx.lineWidth = 4;
-                ctx.beginPath();
-                ctx.moveTo(px + TILE_SIZE / 2, py + TILE_SIZE / 2);
+                const p = playerRef.current;
+                const px = p.x * TILE_SIZE + TILE_SIZE / 2;
+                const py = p.y * TILE_SIZE + TILE_SIZE / 2;
+
                 const hx = pumpRef.current.x * TILE_SIZE + TILE_SIZE / 2;
                 const hy = pumpRef.current.y * TILE_SIZE + TILE_SIZE / 2;
                 let tx = hx;
@@ -878,74 +822,143 @@ export default function DiamondHuntGame() {
                 if (pumpRef.current.dir === 'LEFT') tx -= pumpRef.current.length * TILE_SIZE;
                 if (pumpRef.current.dir === 'UP') ty -= pumpRef.current.length * TILE_SIZE;
                 if (pumpRef.current.dir === 'DOWN') ty += pumpRef.current.length * TILE_SIZE;
+
+                // Glowing Cable
+                ctx.save();
+                ctx.strokeStyle = '#FACC15';
+                ctx.lineWidth = 6;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(px, py);
                 ctx.lineTo(tx, ty);
                 ctx.stroke();
+
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Harpoon Dart Tip
+                ctx.fillStyle = '#EF4444';
+                ctx.beginPath();
+                ctx.arc(tx, ty, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
             }
 
-            // Draw Enemies (Moles)
+            // Draw Player (Miner SVG)
+            const p = playerRef.current;
+            const px = p.x * TILE_SIZE;
+            const py = p.y * TILE_SIZE;
+            const isMoving = p.state === 'WALKING' || p.state === 'WET';
+            const bob = isMoving ? Math.sin(Date.now() / 60) * 2 : 0;
+
+            ctx.save();
+            ctx.translate(px + TILE_SIZE / 2, py + TILE_SIZE / 2 + bob);
+
+            // Flip / Rotate Player
+            if (p.dir === 'LEFT') {
+                ctx.scale(-1, 1);
+            } else if (p.dir === 'UP') {
+                ctx.rotate(-Math.PI / 2);
+            } else if (p.dir === 'DOWN') {
+                ctx.rotate(Math.PI / 2);
+            }
+
+            if (imagesRef.current['miner']) {
+                ctx.drawImage(imagesRef.current['miner'], -TILE_SIZE / 2, -TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
+            } else {
+                ctx.fillStyle = '#3B82F6';
+                ctx.fillRect(-12, -12, 24, 24);
+            }
+            ctx.restore();
+
+            // Draw Enemies (Burrower & Drake SVGs)
             enemiesRef.current.forEach(e => {
                 const ex = e.x * TILE_SIZE;
                 const ey = e.y * TILE_SIZE;
 
-                let size = TILE_SIZE - 8;
+                let size = TILE_SIZE;
+                let wobble = 1;
                 if (e.state === 'INFLATED') {
-                    size += (e.inflation * 20);
+                    size += (e.inflation * 28);
+                    wobble = 1 + Math.sin(Date.now() / 50) * (e.inflation * 0.1);
                 }
 
-                // Mole Body
-                ctx.fillStyle = '#5C4033'; // Dark Brown Mole
-                ctx.beginPath();
-                ctx.ellipse(ex + TILE_SIZE / 2, ey + TILE_SIZE / 2, size / 2, size / 2.5, 0, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.save();
+                ctx.translate(ex + TILE_SIZE / 2, ey + TILE_SIZE / 2);
+                ctx.scale(wobble, wobble);
 
-                // Snout
-                ctx.fillStyle = '#FFB6C1'; // Pink
-                ctx.beginPath();
-                ctx.arc(ex + TILE_SIZE / 2 + (e.x > p.x ? -6 : 6), ey + TILE_SIZE / 2 - 4, 4, 0, Math.PI * 2);
-                ctx.fill();
+                // Face toward player
+                if (e.x > p.x) {
+                    ctx.scale(-1, 1);
+                }
 
-                // Goggles/Glasses (Pooka style)
-                ctx.fillStyle = 'yellow';
-                ctx.fillRect(ex + TILE_SIZE / 2 - 6, ey + TILE_SIZE / 2 - 12, 12, 5);
-                ctx.strokeStyle = 'black';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(ex + TILE_SIZE / 2 - 6, ey + TILE_SIZE / 2 - 12, 12, 5);
+                const enemyImg = e.type === 'DRAKE' ? imagesRef.current['drake'] : imagesRef.current['burrower'];
+                if (enemyImg) {
+                    ctx.drawImage(enemyImg, -size / 2, -size / 2, size, size);
+                } else {
+                    ctx.fillStyle = e.type === 'DRAKE' ? '#10B981' : '#F43F5E';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
             });
+
+            // Draw Particles
+            for (let i = particlesRef.current.length - 1; i >= 0; i--) {
+                const pt = particlesRef.current[i];
+                pt.x += pt.vx;
+                pt.y += pt.vy;
+                pt.life++;
+
+                const progress = pt.life / pt.maxLife;
+                const alpha = Math.max(0, 1 - progress);
+
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = pt.color;
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, pt.size * (1 - progress * 0.5), 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                if (pt.life >= pt.maxLife) {
+                    particlesRef.current.splice(i, 1);
+                }
+            }
 
             // Draw Floating Texts
             for (let i = floatingTextsRef.current.length - 1; i >= 0; i--) {
                 const ft = floatingTextsRef.current[i];
                 ft.life--;
-                ft.y -= 0.5; // Float up
+                ft.y -= 0.6; // Float up
 
+                ctx.save();
                 ctx.fillStyle = ft.color;
-                ctx.font = "bold 16px monospace";
+                ctx.font = "bold 16px 'Courier New', monospace";
+                ctx.shadowColor = '#000000';
+                ctx.shadowBlur = 4;
                 ctx.fillText(ft.text, ft.x, ft.y);
+                ctx.restore();
 
                 if (ft.life <= 0) {
                     floatingTextsRef.current.splice(i, 1);
                 }
             }
 
-            // Draw Speed Boost/Debuff Timer
+            // Draw Speed Boost/Debuff Timer Overlay
             if (speedBoostTimerRef.current !== 0) {
-                ctx.font = "bold 24px monospace";
+                ctx.font = "bold 20px 'Courier New', monospace";
                 const seconds = Math.ceil(Math.abs(speedBoostTimerRef.current) / 60);
 
-                if (speedBoostTimerRef.current < 0) {
-                    // Debuff (Silver)
-                    ctx.fillStyle = '#C0C0C0'; // Silver
-                    ctx.strokeStyle = 'black';
-                    ctx.lineWidth = 4;
-                    ctx.strokeText(`HEAVY: ${seconds}`, 20, ROWS * TILE_SIZE - 20);
-                    ctx.fillText(`HEAVY: ${seconds}`, 20, ROWS * TILE_SIZE - 20);
-                } else {
+                if (speedBoostTimerRef.current > 0) {
                     // Boost (Speed)
-                    ctx.fillStyle = '#00FF00'; // Green
-                    ctx.strokeStyle = 'black';
-                    ctx.lineWidth = 4;
-                    ctx.strokeText(`SPEED: ${seconds}`, COLS * TILE_SIZE - 150, ROWS * TILE_SIZE - 20);
-                    ctx.fillText(`SPEED: ${seconds}`, COLS * TILE_SIZE - 150, ROWS * TILE_SIZE - 20);
+                    ctx.fillStyle = '#00FFFF';
+                    ctx.shadowColor = '#00FFFF';
+                    ctx.shadowBlur = 10;
+                    ctx.fillText(`⚡ SPEED UP: ${seconds}s`, COLS * TILE_SIZE - 200, ROWS * TILE_SIZE - 20);
                 }
             }
 
@@ -967,85 +980,105 @@ export default function DiamondHuntGame() {
         initLevel(1);
     }, []);
 
-
     return (
-        <div className="flex flex-col min-[1380px]:flex-row items-center min-[1380px]:items-start min-[1380px]:justify-center gap-4 min-[1380px]:gap-12 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:py-8 bg-[#050505]">
-            <Link href="/" className="fixed top-4 left-4 z-50 text-white hover:text-amber-500 font-mono font-bold bg-black/50 px-4 py-2 rounded border border-white/20 transition-colors">
-                ← ARCADE
-            </Link>
-
-            {/* Game Column */}
-            <div className="flex flex-col items-center gap-4 w-full max-w-[672px]">
-                <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-xs min-[1380px]:text-xl font-mono text-amber-500 px-4 min-[1380px]:px-0">
-                    <div>SCORE: {score}</div>
-                    <div>{levelName}</div>
-                    <div>LIVES: {lives}</div>
+        <div className="w-full h-full max-h-full flex flex-col items-center justify-between min-h-0 overflow-hidden relative">
+            {/* HUD Header */}
+            <div className="flex-none py-1.5 px-4 flex justify-between items-center w-full max-w-[672px] text-xs sm:text-sm font-mono text-amber-400 bg-gray-900/80 rounded-lg border border-amber-500/30 shadow-md">
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">SCORE:</span>
+                    <span className="text-white font-bold text-sm sm:text-base">{score}</span>
                 </div>
-
-                <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
-                    <div className="relative border-4 border-amber-800 rounded-lg bg-black shadow-[0_0_20px_rgba(217,119,6,0.3)] max-h-full max-w-full aspect-[14/15] w-auto h-auto flex">
-                        <canvas
-                            ref={canvasRef}
-                            width={COLS * TILE_SIZE}
-                            height={ROWS * TILE_SIZE}
-                            className="block w-full h-full object-contain pixelated"
-                        />
-
-                        {gameState === 'START' && (
-                            <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center p-8">
-                                <h2 className="text-4xl font-bold text-amber-500 mb-4 animate-pulse">DIAMOND HUNT</h2>
-                                <p className="text-gray-400 mb-8 max-w-md">
-                                    Dig through the earth, pump enemies until they pop!
-                                    <br /><br />
-                                    <span className="text-yellow-400">FIND DIAMONDS & GOLD!</span>
-                                    <br />
-                                    <span className="text-red-400">AVOID ROCKS & BOMBS!</span>
-                                </p>
-                                <Button onClick={resetGame} className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-8 py-4 text-xl">
-                                    INSERT COIN
-                                </Button>
-                            </div>
-                        )}
-
-                        {gameState === 'GAME_OVER' && (
-                            <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-4 z-10 overflow-auto">
-                                <h2 className="text-4xl font-bold text-red-500 mb-2">GAME OVER</h2>
-                                <p className="text-white text-xl mb-6">Final Score: {score}</p>
-
-                                <div className="w-full max-w-sm mb-6 min-[1380px]:hidden">
-                                    <Leaderboard gameType="dig_dug" />
-                                </div>
-
-                                <Button onClick={resetGame} className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-8 py-4">
-                                    TRY AGAIN
-                                </Button>
-                            </div>
-                        )}
-                    </div>
+                <div className="px-2.5 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full font-bold text-amber-300 text-xs">
+                    {levelName}
                 </div>
-
-                <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-400 text-sm min-[1380px]:text-lg font-mono mt-4 text-center hidden min-[400px]:block">
-                    HIDDEN ITEMS IN DIRT • PUMP ENEMIES TO POP • DIG FAST!
-                </div>
-            </div>
-
-            {/* Diamond Timer UI (Left of Game) */}
-            <div className="hidden min-[1380px]:flex flex-col items-end justify-center w-32 h-full absolute left-4 top-0 z-10 pointer-events-none">
                 {diamondTimer > 0 && (
-                    <div className="bg-cyan-900/80 border-2 border-cyan-400 p-4 rounded-lg shadow-[0_0_15px_cyan] animate-pulse">
-                        <div className="text-cyan-200 text-xs font-bold mb-1">SPEED UP</div>
-                        <div className="text-4xl font-mono text-cyan-50">{diamondTimer}</div>
-                        <div className="text-cyan-300 text-[10px]">SECONDS</div>
+                    <div className="flex items-center gap-1 px-2 py-0.5 bg-cyan-950/90 border border-cyan-400 rounded-md text-cyan-300 animate-pulse text-xs">
+                        <img src="/assets/diamond-hunt/diamond.svg" alt="Boost" className="w-4 h-4 object-contain" />
+                        <span className="font-bold">{diamondTimer}s</span>
                     </div>
                 )}
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LIVES:</span>
+                    <div className="flex gap-1">
+                        {Array.from({ length: Math.max(0, lives) }).map((_, i) => (
+                            <img
+                                key={i}
+                                src="/assets/diamond-hunt/miner.svg"
+                                alt="Life"
+                                className="w-4 h-4 sm:w-5 sm:h-5 object-contain inline-block drop-shadow-[0_0_5px_rgba(245,158,11,0.8)]"
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
 
-            {/* Desktop Leaderboard Sidebar */}
-            <div className="hidden min-[1380px]:block w-80 pt-16">
-                <Leaderboard gameType="dig_dug" />
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1 sm:p-2 relative">
+                <div className="relative border-2 sm:border-4 border-amber-600/80 rounded-xl bg-black shadow-[0_0_30px_rgba(217,119,6,0.4)] max-h-full max-w-full aspect-[14/15] w-auto h-auto flex overflow-hidden">
+                    <canvas
+                        ref={canvasRef}
+                        width={COLS * TILE_SIZE}
+                        height={ROWS * TILE_SIZE}
+                        className="block w-full h-full object-contain pixelated"
+                    />
+
+                    {gameState === 'START' && (
+                        <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center text-center p-6 backdrop-blur-sm z-20">
+                            <div className="flex items-center justify-center gap-3 mb-3">
+                                <img src="/assets/diamond-hunt/diamond.svg" alt="Diamond" className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce" />
+                                <h2 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 font-mono tracking-wider drop-shadow-[0_0_20px_rgba(245,158,11,0.8)]">
+                                    DIAMOND HUNT
+                                </h2>
+                                <img src="/assets/diamond-hunt/gold.svg" alt="Gold" className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce" />
+                            </div>
+                            <p className="text-gray-300 mb-4 max-w-md font-sans text-xs sm:text-sm leading-relaxed">
+                                Dig tunnels underground, collect diamonds &amp; gold, and inflate monsters before they catch you!
+                            </p>
+                            <div className="grid grid-cols-3 gap-3 mb-6 bg-gray-900/80 p-3 rounded-xl border border-gray-800">
+                                <div className="flex flex-col items-center">
+                                    <img src="/assets/diamond-hunt/diamond.svg" alt="Diamond" className="w-6 h-6 mb-1" />
+                                    <span className="text-[10px] text-cyan-400 font-mono">+250 (SPEED)</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                    <img src="/assets/diamond-hunt/gold.svg" alt="Gold" className="w-6 h-6 mb-1" />
+                                    <span className="text-[10px] text-yellow-400 font-mono">+100 GOLD</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                    <img src="/assets/diamond-hunt/rock.svg" alt="Rock" className="w-6 h-6 mb-1" />
+                                    <span className="text-[10px] text-gray-400 font-mono">AVOID FALLS</span>
+                                </div>
+                            </div>
+                            <Button
+                                onClick={resetGame}
+                                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-extrabold px-8 py-4 text-xl rounded-xl shadow-[0_0_25px_rgba(245,158,11,0.6)] transform hover:scale-105 transition-all font-mono"
+                            >
+                                INSERT COIN
+                            </Button>
+                        </div>
+                    )}
+
+                    {gameState === 'GAME_OVER' && (
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-6 z-20 overflow-auto backdrop-blur-sm">
+                            <h2 className="text-4xl sm:text-5xl font-extrabold text-red-500 font-mono tracking-widest mb-2 drop-shadow-[0_0_20px_rgba(239,68,68,0.8)]">
+                                GAME OVER
+                            </h2>
+                            <p className="text-white text-xl font-mono mb-6">Final Score: <span className="text-amber-400 font-bold">{score}</span></p>
+
+                            <Button
+                                onClick={resetGame}
+                                className="bg-amber-500 hover:bg-amber-600 text-black font-extrabold px-8 py-4 text-xl rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.6)] font-mono"
+                            >
+                                TRY AGAIN
+                            </Button>
+                        </div>
+                    )}
+                </div>
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="DIAMOND_HUNT" className="min-[1380px]:hidden absolute bottom-0" />
+            <div className="flex-none py-1 px-3 text-gray-400 text-[10px] sm:text-xs font-mono hidden min-[400px]:block bg-gray-900/40 rounded-md border border-gray-800">
+                ARROWS to Dig • SPACE to Pump / Pop Enemies • Collect All Treasures to Win!
+            </div>
+
+            <MobileControls onInput={handleMobileInput} gameType="DIAMOND_HUNT" className="lg:hidden" />
         </div>
     );
 }

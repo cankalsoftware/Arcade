@@ -1,7 +1,46 @@
-<svg width="80" height="30" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg">
-  <rect x="2" y="5" width="76" height="20" rx="10" fill="#78350f"/>
-  <path d="M10 5 L10 25" stroke="#5c2606" stroke-width="2"/>
-  <path d="M30 5 L30 25" stroke="#5c2606" stroke-width="2"/>
-  <path d="M50 5 L50 25" stroke="#5c2606" stroke-width="2"/>
-  <path d="M70 5 L70 25" stroke="#5c2606" stroke-width="2"/>
+<svg width="80" height="30" viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logBark" x1="0" y1="0" x2="0" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#92400E"/>
+      <stop offset="30%" stop-color="#78350F"/>
+      <stop offset="70%" stop-color="#451A03"/>
+      <stop offset="100%" stop-color="#290E02"/>
+    </linearGradient>
+    <radialGradient id="logEnd" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FEF3C7"/>
+      <stop offset="50%" stop-color="#FDE68A"/>
+      <stop offset="90%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#78350F"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Water Ripple around floating log -->
+  <ellipse cx="40" cy="15" rx="39" ry="14" fill="#0284C7" opacity="0.3"/>
+
+  <!-- Main Log Trunk Body -->
+  <rect x="8" y="4" width="64" height="22" rx="4" fill="url(#logBark)"/>
+
+  <!-- Bark Texture Lines & Knots -->
+  <path d="M14 8 H32 M40 8 H68" stroke="#451A03" stroke-width="2" stroke-linecap="round"/>
+  <path d="M12 15 H24 M36 15 H56" stroke="#451A03" stroke-width="2" stroke-linecap="round"/>
+  <path d="M16 22 H44 M52 22 H66" stroke="#290E02" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Tree Knot -->
+  <ellipse cx="30" cy="14" rx="4" ry="2.5" fill="#451A03"/>
+  <circle cx="30" cy="14" r="1.5" fill="#78350F"/>
+
+  <!-- Moss growth patch -->
+  <ellipse cx="50" cy="7" rx="6" ry="2" fill="#16A34A" opacity="0.8"/>
+  <ellipse cx="20" cy="23" rx="4" ry="1.5" fill="#16A34A" opacity="0.8"/>
+
+  <!-- Cut Log Ends with Growth Rings -->
+  <!-- Left Cut End -->
+  <ellipse cx="8" cy="15" rx="6" ry="11" fill="url(#logEnd)"/>
+  <ellipse cx="8" cy="15" rx="3.5" ry="7" stroke="#78350F" stroke-width="1.2" fill="none"/>
+  <ellipse cx="8" cy="15" rx="1.5" ry="3" stroke="#78350F" stroke-width="1.2" fill="none"/>
+
+  <!-- Right Cut End -->
+  <ellipse cx="72" cy="15" rx="6" ry="11" fill="url(#logEnd)"/>
+  <ellipse cx="72" cy="15" rx="3.5" ry="7" stroke="#78350F" stroke-width="1.2" fill="none"/>
+  <ellipse cx="72" cy="15" rx="1.5" ry="3" stroke="#78350F" stroke-width="1.2" fill="none"/>
 </svg>

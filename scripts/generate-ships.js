@@ -31,7 +31,7 @@ function generateShipSVG(seed) {
     </svg>`;
 }
 
-const outputDir = path.join(__dirname, '../public/assets');
+const outputDir = path.join(__dirname, '../public/assets/alien-attack');
 
 // Generate enemies 5 to 10
 for (let i = 5; i <= 10; i++) {

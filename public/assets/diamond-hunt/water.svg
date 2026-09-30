@@ -1,0 +1,30 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="waterGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.8"/>
+      <stop offset="60%" stop-color="#0284C7" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0369A1" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="waterDrop" x1="14" y1="8" x2="34" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E0F2FE"/>
+      <stop offset="30%" stop-color="#38BDF8"/>
+      <stop offset="70%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0C4A6E"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="24" cy="24" r="22" fill="url(#waterGlow)"/>
+
+  <!-- Water Droplet Shape -->
+  <path d="M24 6 C24 6 10 22 10 32 C10 40 16 44 24 44 C32 44 38 40 38 32 C38 22 24 6 24 6 Z" fill="url(#waterDrop)"/>
+
+  <!-- Inner Refraction / Light Curve -->
+  <path d="M15 28 C15 22 21 15 24 10 C24 15 19 22 18 29 C17 35 21 40 24 41 C18 40 15 35 15 28 Z" fill="#FFFFFF" opacity="0.6"/>
+
+  <!-- Specular Bubble Highlights -->
+  <circle cx="29" cy="24" r="3.5" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="32" cy="31" r="2" fill="#BAE6FD" opacity="0.7"/>
+
+  <!-- Water Ripple Waves at Bottom -->
+  <path d="M8 40 Q24 46 40 40" stroke="#7DD3FC" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+</svg>

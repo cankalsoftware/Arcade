@@ -1,0 +1,74 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="gorillaFur" cx="40%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#4B5563"/>
+      <stop offset="60%" stop-color="#374151"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </radialGradient>
+    <radialGradient id="gorillaSkin" cx="45%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#9CA3AF"/>
+      <stop offset="60%" stop-color="#6B7280"/>
+      <stop offset="100%" stop-color="#4B5563"/>
+    </radialGradient>
+    <linearGradient id="silverbackChest" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E5E7EB"/>
+      <stop offset="100%" stop-color="#9CA3AF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Big Powerful Gorilla Shoulders & Arms -->
+  <circle cx="12" cy="24" r="11" fill="url(#gorillaFur)"/>
+  <circle cx="48" cy="24" r="11" fill="url(#gorillaFur)"/>
+  <path d="M4 24 C2 36 8 46 14 46 C18 46 18 36 16 26 Z" fill="url(#gorillaFur)"/>
+  <path d="M56 24 C58 36 52 46 46 46 C42 46 42 36 44 26 Z" fill="url(#gorillaFur)"/>
+  
+  <!-- Powerful Fists -->
+  <circle cx="14" cy="46" r="6.5" fill="url(#gorillaSkin)"/>
+  <circle cx="46" cy="46" r="6.5" fill="url(#gorillaSkin)"/>
+
+  <!-- Torso & Body -->
+  <ellipse cx="30" cy="34" rx="19" ry="17" fill="url(#gorillaFur)"/>
+  
+  <!-- Silverback Chest Plate -->
+  <path d="M19 24 C19 18 41 18 41 24 C41 36 19 36 19 24 Z" fill="url(#silverbackChest)"/>
+  <path d="M30 22 V34" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M22 28 Q30 31 38 28" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Sturdy Legs -->
+  <ellipse cx="20" cy="50" rx="7" ry="5" fill="url(#gorillaFur)"/>
+  <ellipse cx="40" cy="50" rx="7" ry="5" fill="url(#gorillaFur)"/>
+  <!-- Feet -->
+  <ellipse cx="18" cy="54" rx="7" ry="3.5" fill="url(#gorillaSkin)"/>
+  <ellipse cx="42" cy="54" rx="7" ry="3.5" fill="url(#gorillaSkin)"/>
+
+  <!-- Head -->
+  <ellipse cx="30" cy="15" rx="14" ry="12" fill="url(#gorillaFur)"/>
+  <!-- Crest Tuft -->
+  <polygon points="28,2 32,2 30,0" fill="#111827"/>
+
+  <!-- Ears -->
+  <circle cx="17" cy="14" r="3.5" fill="url(#gorillaSkin)"/>
+  <circle cx="43" cy="14" r="3.5" fill="url(#gorillaSkin)"/>
+
+  <!-- Face / Muzzle -->
+  <ellipse cx="30" cy="18" rx="11" ry="8" fill="url(#gorillaSkin)"/>
+  
+  <!-- Glowing Fierce Eyes -->
+  <ellipse cx="25" cy="12" rx="3" ry="3.5" fill="#FEF08A"/>
+  <circle cx="25.5" cy="12" r="1.8" fill="#B45309"/>
+  <circle cx="26" cy="11.5" r="0.6" fill="#FFFFFF"/>
+  <ellipse cx="35" cy="12" rx="3" ry="3.5" fill="#FEF08A"/>
+  <circle cx="34.5" cy="12" r="1.8" fill="#B45309"/>
+  <circle cx="34" cy="11.5" r="0.6" fill="#FFFFFF"/>
+
+  <!-- Nostrils -->
+  <circle cx="28" cy="17" r="1.5" fill="#1F2937"/>
+  <circle cx="32" cy="17" r="1.5" fill="#1F2937"/>
+
+  <!-- Bared Teeth -->
+  <path d="M23 20 Q30 25 37 20 Z" fill="#FFFFFF"/>
+  <path d="M23 20 Q30 25 37 20" stroke="#374151" stroke-width="1.5" fill="none"/>
+  <line x1="27" y1="21" x2="27" y2="23" stroke="#374151"/>
+  <line x1="30" y1="21" x2="30" y2="24" stroke="#374151"/>
+  <line x1="33" y1="21" x2="33" y2="23" stroke="#374151"/>
+</svg>

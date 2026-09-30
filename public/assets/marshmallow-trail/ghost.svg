@@ -1,0 +1,29 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="ghostRed" cx="40%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FF4D4D"/>
+      <stop offset="60%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#991B1B"/>
+    </radialGradient>
+    <radialGradient id="ghostGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#EF4444" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#EF4444" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="24" cy="24" r="22" fill="url(#ghostGlow)"/>
+
+  <!-- Ghost Dome & Wavy Tentacles -->
+  <path d="M8 24 C8 12 15 6 24 6 C33 6 40 12 40 24 V40 L35 35 L30 40 L24 35 L18 40 L13 35 L8 40 Z" fill="url(#ghostRed)"/>
+
+  <!-- Big Expressive Ghost Eyes -->
+  <!-- Left Eye -->
+  <ellipse cx="18" cy="20" rx="5" ry="6.5" fill="#FFFFFF"/>
+  <ellipse cx="16.5" cy="20" rx="2.5" ry="3.5" fill="#1D4ED8"/>
+  <circle cx="15.5" cy="18.5" r="1" fill="#FFFFFF"/>
+
+  <!-- Right Eye -->
+  <ellipse cx="30" cy="20" rx="5" ry="6.5" fill="#FFFFFF"/>
+  <ellipse cx="28.5" cy="20" rx="2.5" ry="3.5" fill="#1D4ED8"/>
+  <circle cx="27.5" cy="18.5" r="1" fill="#FFFFFF"/>
+</svg>

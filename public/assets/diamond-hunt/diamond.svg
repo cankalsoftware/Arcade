@@ -1,0 +1,54 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="diamondGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00FFFF" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#38BDF8" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="topFacet" x1="14" y1="10" x2="34" y2="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E0F2FE"/>
+      <stop offset="100%" stop-color="#7DD3FC"/>
+    </linearGradient>
+    <linearGradient id="midFacet1" x1="10" y1="18" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+    <linearGradient id="midFacet2" x1="24" y1="18" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#0EA5E9"/>
+    </linearGradient>
+    <linearGradient id="midFacet3" x1="38" y1="18" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7DD3FC"/>
+      <stop offset="100%" stop-color="#0369A1"/>
+    </linearGradient>
+    <filter id="diamondSparkle">
+      <feGaussianBlur stdDeviation="1" result="glow"/>
+      <feComposite in="SourceGraphic" in2="glow" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient Glow -->
+  <circle cx="24" cy="24" r="22" fill="url(#diamondGlow)"/>
+
+  <!-- Diamond Crown (Top) -->
+  <!-- Top Table -->
+  <polygon points="17,11 31,11 37,18 11,18" fill="url(#topFacet)"/>
+  <polygon points="17,11 24,18 31,11" fill="#F0F9FF"/>
+  <polygon points="11,18 17,11 24,18" fill="#BAE6FD"/>
+  <polygon points="37,18 31,11 24,18" fill="#7DD3FC"/>
+
+  <!-- Diamond Pavilion (Bottom) -->
+  <polygon points="11,18 24,18 24,39" fill="url(#midFacet1)"/>
+  <polygon points="24,18 37,18 24,39" fill="url(#midFacet3)"/>
+  <polygon points="18,18 30,18 24,39" fill="url(#midFacet2)"/>
+
+  <!-- Inner Sparkle Highlights -->
+  <polygon points="24,19 28,26 24,36 20,26" fill="#E0F2FE" opacity="0.6"/>
+
+  <!-- Outer Cut Edges Outline -->
+  <polygon points="17,11 31,11 37,18 24,39 11,18" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"/>
+
+  <!-- Glistening Star Sparkles -->
+  <path d="M12 11 L13 8 L14 11 L17 12 L14 13 L13 16 L12 13 L9 12 Z" fill="#FFFFFF" filter="url(#diamondSparkle)"/>
+  <path d="M35 28 L35.7 26 L36.4 28 L38.4 28.7 L36.4 29.4 L35.7 31.4 L35 29.4 L33 28.7 Z" fill="#FFFFFF" filter="url(#diamondSparkle)"/>
+</svg>

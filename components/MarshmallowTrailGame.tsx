@@ -17,10 +17,10 @@ const BASE_GHOST_SPEED = 0.05;
 const GHOST_SPEED_INCREMENT = 0.002;
 
 const GHOST_COLORS = [
-    '#FF0000', // Red (Blinky)
-    '#FFB8FF', // Pink (Pinky)
-    '#00FFFF', // Cyan (Inky)
-    '#FFB852', // Orange (Clyde)
+    '#FF0000', // Crimson
+    '#FFB8FF', // Pastel Pink
+    '#00FFFF', // Cyan
+    '#FFB852', // Orange
     '#9400D3', // Purple
     '#00FF00', // Green
     '#0000FF', // Blue
@@ -132,14 +132,20 @@ export default function MarshmallowTrailGame() {
 
     // Input Handling
     const heldDirectionsRef = useRef<Direction[]>([]);
+    const isBoostingRef = useRef<boolean>(false);
 
     // Input Handling
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (gameState !== 'PLAYING') return;
 
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code) || e.key === ' ') {
                 e.preventDefault(); // Prevent scrolling
+            }
+
+            if (e.code === 'Space' || e.key === ' ') {
+                isBoostingRef.current = true;
+                return;
             }
 
             let newDir: Direction = 'NONE';
@@ -159,6 +165,11 @@ export default function MarshmallowTrailGame() {
         };
 
         const handleKeyUp = (e: KeyboardEvent) => {
+            if (e.code === 'Space' || e.key === ' ') {
+                isBoostingRef.current = false;
+                return;
+            }
+
             let releasedDir: Direction = 'NONE';
             switch (e.key) {
                 case 'ArrowUp': releasedDir = 'UP'; break;
@@ -187,6 +198,11 @@ export default function MarshmallowTrailGame() {
     }, [gameState]);
 
     const handleMobileInput = (action: ControlAction, active: boolean) => {
+        if (action === 'A' || action === 'B') {
+            isBoostingRef.current = active;
+            return;
+        }
+
         let dir: Direction = 'NONE';
         if (action === 'UP') dir = 'UP';
         else if (action === 'DOWN') dir = 'DOWN';
@@ -428,6 +444,11 @@ export default function MarshmallowTrailGame() {
         };
 
         const update = () => {
+            // Dynamic 2X Turbo Speed when holding Space or mobile A/B
+            marshmallowtrailRef.current.speed = isBoostingRef.current
+                ? MARSHMALLOW_TRAIL_SPEED * 2
+                : MARSHMALLOW_TRAIL_SPEED;
+
             // Move MarshmallowTrail
             moveEntity(marshmallowtrailRef.current, false);
 
@@ -534,6 +555,34 @@ export default function MarshmallowTrailGame() {
                 ctx.arc(gx + 4 + (ghost.dir === 'LEFT' ? -1 : ghost.dir === 'RIGHT' ? 1 : 0), gy - 4 + (ghost.dir === 'UP' ? -1 : ghost.dir === 'DOWN' ? 1 : 0), 1.5, 0, Math.PI * 2);
                 ctx.fill();
             });
+
+            // Draw 2X Turbo Speed Badge & Player Glow
+            if (isBoostingRef.current) {
+                // Glow around player
+                ctx.save();
+                ctx.fillStyle = 'rgba(250, 204, 21, 0.35)';
+                ctx.beginPath();
+                ctx.arc(px, py, TILE_SIZE, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 2X Speed HUD Pill
+                const hudW = 130;
+                const hudH = 18;
+                const hudX = (colsRef.current * TILE_SIZE - hudW) / 2;
+                ctx.fillStyle = 'rgba(234, 179, 8, 0.9)';
+                ctx.beginPath();
+                ctx.roundRect(hudX, 4, hudW, hudH, 4);
+                ctx.fill();
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                ctx.fillStyle = '#000000';
+                ctx.font = "bold 9px 'Courier New', monospace";
+                ctx.textAlign = 'center';
+                ctx.fillText('⚡ 2X TURBO SPEED', colsRef.current * TILE_SIZE / 2, 16);
+                ctx.restore();
+            }
         };
 
         const loop = () => {
@@ -552,17 +601,26 @@ export default function MarshmallowTrailGame() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4 h-[100dvh] w-full overflow-hidden min-[1380px]:h-auto min-[1380px]:overflow-visible min-[1380px]:pb-0">
-            <div className="flex-none pt-4 flex justify-center gap-6 min-[1380px]:justify-between w-full max-w-[400px] text-xs min-[1380px]:text-xl font-mono text-yellow-400 px-4 min-[1380px]:px-0">
-                <div>SCORE: {score}</div>
-                <div>LEVEL: {level}</div>
-                <div>LIVES: {lives}</div>
+        <div className="w-full h-full max-h-full flex flex-col items-center justify-between min-h-0 overflow-hidden relative">
+            <div className="flex-none py-1.5 px-4 flex justify-between items-center w-full max-w-[400px] text-xs sm:text-sm font-mono text-yellow-400 bg-gray-900/80 rounded-lg border border-gray-800 shadow-md">
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">SCORE:</span>
+                    <span className="text-white font-bold">{score}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LEVEL:</span>
+                    <span className="text-pink-400 font-bold">{level}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <span className="text-gray-400">LIVES:</span>
+                    <span className="text-yellow-400 font-bold">{lives}</span>
+                </div>
             </div>
 
-            <div className="flex-1 w-full min-h-0 flex items-center justify-center pb-48 min-[1380px]:pb-0 px-4">
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1 sm:p-2 relative">
                 <div 
-                    style={{ aspectRatio: colsRef.current / rowsRef.current } as React.CSSProperties}
-                    className="relative border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] max-h-full max-w-full w-auto h-auto flex"
+                    style={{ aspectRatio: `${colsRef.current} / ${rowsRef.current}` }}
+                    className="relative border-2 sm:border-4 border-blue-900 rounded-lg bg-black shadow-[0_0_20px_rgba(0,0,255,0.3)] max-h-full max-w-full w-auto h-auto flex overflow-hidden"
                 >
                     <canvas
                         ref={canvasRef}
@@ -572,40 +630,43 @@ export default function MarshmallowTrailGame() {
                     />
 
                     {gameState === 'START' && (
-                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-yellow-500 mb-4 animate-pulse">MARSHMALLOW_TRAIL</h2>
-                            <p className="text-gray-400 mb-8">Use Arrow Keys to Move</p>
-                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
+                        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-3xl sm:text-4xl font-bold text-yellow-500 mb-2 animate-pulse font-mono">MARSHMALLOW TRAIL</h2>
+                            <p className="text-gray-400 mb-4 text-xs sm:text-sm">Use Arrow Keys to Move</p>
+                            <p className="text-yellow-400 mb-6 text-xs sm:text-sm font-mono flex items-center gap-1.5 bg-yellow-950/60 px-3 py-1.5 rounded-full border border-yellow-500/30">
+                                <span>⚡</span> <span>Hold <b>SPACEBAR</b> or <b>A/B Button</b> for 2X Speed!</span>
+                            </p>
+                            <Button onClick={startGame} className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl rounded-lg shadow-lg shadow-yellow-500/30">
                                 INSERT COIN
                             </Button>
                         </div>
                     )}
 
                     {gameState === 'GAME_OVER' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-red-500 mb-4">GAME OVER</h2>
-                            <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
-                            <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold text-red-500 mb-4 font-mono">GAME OVER</h2>
+                            <p className="text-yellow-400 text-xl mb-6 font-mono">Final Score: <span className="text-white font-bold">{score}</span></p>
+                            <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 font-mono">
                                 TRY AGAIN
                             </Button>
                         </div>
                     )}
 
                     {gameState === 'VICTORY' && (
-                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center">
-                            <h2 className="text-4xl font-bold text-yellow-400 mb-4">YOU WIN!</h2>
-                            <p className="text-white text-xl mb-8">All 50 Levels Cleared!</p>
-                            <p className="text-yellow-400 text-xl mb-8">Final Score: {score}</p>
-                            <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4">
+                        <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center z-20">
+                            <h2 className="text-4xl sm:text-5xl font-bold text-yellow-400 mb-4 font-mono">YOU WIN!</h2>
+                            <p className="text-white text-lg mb-2 font-mono">All 50 Levels Cleared!</p>
+                            <p className="text-yellow-400 text-xl mb-6 font-mono">Final Score: <span className="text-white font-bold">{score}</span></p>
+                            <Button onClick={startGame} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 font-mono">
                                 PLAY AGAIN
                             </Button>
                         </div>
                     )}
 
                     {gameState === 'AUTH_REQUIRED' && (
-                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8">
+                        <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center text-center p-8 z-20">
                             <h2 className="text-3xl font-bold text-yellow-400 mb-4">LEVEL 3 LOCKED</h2>
-                            <p className="text-gray-300 mb-8">Please sign in to continue your streak!</p>
+                            <p className="text-gray-300 mb-6">Please sign in to continue your streak!</p>
                             <SignInButton mode="modal">
                                 <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4 text-xl">
                                     SIGN IN TO CONTINUE
@@ -617,11 +678,13 @@ export default function MarshmallowTrailGame() {
                 </div>
             </div>
 
-            <div className="flex-none mb-2 min-[1380px]:mb-0 text-gray-500 text-[10px] min-[1380px]:text-sm font-mono mt-4 hidden min-[400px]:block">
-                Avoid the Ghosts! Clear all pellets to advance.
+            <div className="flex-none py-1 px-3 text-gray-300 text-[10px] sm:text-xs font-mono hidden min-[400px]:flex items-center gap-2 bg-gray-900/60 rounded-md border border-gray-800">
+                <span>ARROWS to Move</span>
+                <span className="text-gray-600">•</span>
+                <span className="text-yellow-400 font-bold">Hold SPACE for 2X Speed Boost ⚡</span>
             </div>
 
-            <MobileControls onInput={handleMobileInput} gameType="MARSHMALLOW_TRAIL" className="min-[1380px]:hidden absolute bottom-0" />
+            <MobileControls onInput={handleMobileInput} gameType="MARSHMALLOW_TRAIL" className="lg:hidden" />
         </div>
     );
 }

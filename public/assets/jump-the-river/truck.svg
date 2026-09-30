@@ -1,8 +1,51 @@
-<svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-  <rect x="2" y="5" width="56" height="20" fill="#eab308"/>
-  <rect x="40" y="5" width="16" height="20" fill="#facc15"/> <!-- Cab -->
-  <rect x="45" y="8" width="8" height="14" fill="#000" opacity="0.5"/> <!-- Window -->
-  <rect x="5" y="24" width="8" height="4" fill="#000"/> <!-- Wheel -->
-  <rect x="25" y="24" width="8" height="4" fill="#000"/> <!-- Wheel -->
-  <rect x="45" y="24" width="8" height="4" fill="#000"/> <!-- Wheel -->
+<svg width="80" height="30" viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="truckCab" x1="50" y1="0" x2="80" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="50%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0369A1"/>
+    </linearGradient>
+    <linearGradient id="trailerBed" x1="0" y1="0" x2="0" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="50%" stop-color="#CBD5E1"/>
+      <stop offset="100%" stop-color="#94A3B8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Heavy Wheels -->
+  <rect x="6" y="2" width="7" height="4" rx="1.5" fill="#0F172A"/>
+  <rect x="15" y="2" width="7" height="4" rx="1.5" fill="#0F172A"/>
+  <rect x="42" y="2" width="7" height="4" rx="1.5" fill="#0F172A"/>
+  <rect x="68" y="2" width="7" height="4" rx="1.5" fill="#0F172A"/>
+
+  <rect x="6" y="24" width="7" height="4" rx="1.5" fill="#0F172A"/>
+  <rect x="15" y="24" width="7" height="4" rx="1.5" fill="#0F172A"/>
+  <rect x="42" y="24" width="7" height="4" rx="1.5" fill="#0F172A"/>
+  <rect x="68" y="24" width="7" height="4" rx="1.5" fill="#0F172A"/>
+
+  <!-- Semi Cargo Trailer (Left) -->
+  <rect x="3" y="4" width="50" height="22" rx="4" fill="url(#trailerBed)"/>
+  <!-- Trailer Ribs / Details -->
+  <line x1="12" y1="4" x2="12" y2="26" stroke="#64748B" stroke-width="1.5"/>
+  <line x1="22" y1="4" x2="22" y2="26" stroke="#64748B" stroke-width="1.5"/>
+  <line x1="32" y1="4" x2="32" y2="26" stroke="#64748B" stroke-width="1.5"/>
+  <line x1="42" y1="4" x2="42" y2="26" stroke="#64748B" stroke-width="1.5"/>
+
+  <!-- Hitch Link -->
+  <rect x="52" y="12" width="5" height="6" fill="#334155"/>
+
+  <!-- Semi Cab (Right) -->
+  <rect x="56" y="4" width="21" height="22" rx="5" fill="url(#truckCab)"/>
+
+  <!-- Front Windshield -->
+  <path d="M70 6 H74 C75.5 6 76 7 76 9 V21 C76 23 75.5 24 74 24 H70 C69 24 68 22 68 20 V10 C68 8 69 6 70 6 Z" fill="#0284C7"/>
+  <path d="M71 7 L75 14" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Chrome Smokestacks -->
+  <rect x="59" y="3" width="3" height="3" rx="1" fill="#E2E8F0"/>
+  <rect x="59" y="24" width="3" height="3" rx="1" fill="#E2E8F0"/>
+
+  <!-- Headlights -->
+  <rect x="76" y="6" width="1.5" height="4" rx="0.7" fill="#FEF08A"/>
+  <rect x="76" y="20" width="1.5" height="4" rx="0.7" fill="#FEF08A"/>
 </svg>
